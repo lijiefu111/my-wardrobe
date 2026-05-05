@@ -324,119 +324,178 @@ body {
 }
 .ai-btn:active { opacity: 0.8; }
 
-/* === 搭配结果 === */
-.result-section { padding: 0 16px; }
+/* === 搭配结果区 === */
+.result-area { padding: 0 16px 16px; }
 
-/* 状态一 */
-.result-empty {
-  text-align: center;
-  padding: 48px 0;
+.empty-state {
+  text-align: center; padding: 48px 0;
+  color: #CCC;
 }
-.result-empty .icon { font-size: 48px; margin-bottom: 12px; }
-.result-empty .text { font-size: 14px; color: #BBB; }
+.empty-icon { font-size: 36px; margin-bottom: 8px; }
+.empty-text { font-size: 14px; }
 
-/* 状态二 loading */
-.result-loading { display: none; }
-.skeleton {
-  height: 120px;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #F0F0F0 25%, #E0E0E0 50%, #F0F0F0 75%);
+/* 骨架屏 */
+.skeleton-card { padding: 16px; border: 1px solid #F0F0F0; margin-bottom: 12px; }
+.skeleton-block { height: 160px; background: #F5F5F5; margin-bottom: 12px; }
+.skeleton-line { height: 12px; background: #F5F5F5; margin-bottom: 8px; border-radius: 2px; }
+.skeleton-line.short { width: 60%; }
+.shimmer {
+  background: linear-gradient(90deg, #F5F5F5 25%, #ECECEC 50%, #F5F5F5 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  animation: shimmer2 1.2s infinite;
+}
+@keyframes shimmer2 { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* 标题行 */
+.outfit-title-row {
+  display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 12px;
 }
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+.outfit-title-left { display: flex; align-items: center; gap: 6px; }
+.outfit-star { color: #E8805A; font-size: 14px; }
+.outfit-title-text { font-size: 15px; font-weight: 500; color: #1A1A1A; }
+.outfit-slide-hint { font-size: 11px; color: #BBB; }
+
+/* 横向滑动 */
+.outfits-swiper {
+  display: flex; gap: 12px;
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  padding-bottom: 4px; margin: 0 -16px; padding-left: 16px; padding-right: 16px;
+}
+.outfits-swiper::-webkit-scrollbar { display: none; }
+
+/* 单套穿搭卡片 */
+.outfit-card {
+  min-width: calc(100% - 40px); scroll-snap-align: start;
+  border: 1px solid #E8E8E8; border-radius: 12px; padding: 16px;
+  background: #fff; flex-shrink: 0;
+  transition: border-color 0.2s;
+}
+.outfit-card.active-card { border-color: #1A1A1A; }
+
+/* 三张衣物图片横排 */
+.outfit-clothes-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  margin-bottom: 14px;
+}
+.outfit-cloth-item { position: relative; }
+.outfit-cloth-img {
+  width: 100%; aspect-ratio: 3/4; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+}
+.cloth-score-tag {
+  position: absolute; top: 6px; right: 6px;
+  background: rgba(232,128,90,0.9); color: #fff;
+  font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 10px;
 }
 
-/* 状态三 结果 */
-.result-content { display: none; }
-.result-summary {
-  font-size: 12px;
-  color: #999;
-  margin-bottom: 12px;
+/* 风格标签 */
+.outfit-style-tags {
+  display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap;
 }
-.plan-card {
-  border: 1px solid #E0E0E0;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 12px;
-  transition: all 0.25s;
-}
-.plan-card.selected {
-  border: 2px solid #000;
-}
-.plan-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.plan-title { font-size: 14px; font-weight: 700; }
-.plan-select-btn {
-  font-size: 12px;
-  padding: 6px 14px;
-  background: #fff;
-  color: #000;
-  border: 1px solid #000;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.plan-select-btn.is-selected {
-  background: #000;
-  color: #fff;
-}
-.plan-items {
-  display: flex;
-  gap: 8px;
-  margin: 12px 0;
-}
-.plan-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.plan-swatch {
-  width: 48px;
-  height: 64px;
-  border-radius: 6px;
-  border: 1px solid #F0F0F0;
-}
-.plan-item-name {
-  font-size: 10px;
-  color: #999;
-  margin-top: 4px;
-  text-align: center;
-  max-width: 56px;
-  line-height: 1.2;
-}
-.plan-reason {
-  font-size: 12px;
-  color: #666;
-  line-height: 1.6;
+.outfit-style-tag {
+  border: 1px solid #E0E0E0; border-radius: 20px;
+  padding: 3px 10px; font-size: 11px; color: #555;
 }
 
-/* 收藏按钮 */
-.favorite-btn {
-  display: none;
-  width: 100%;
-  height: 44px;
-  background: #fff;
-  color: #000;
-  border: 1px solid #000;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  margin-top: 8px;
-  margin-bottom: 20px;
-  transition: all 0.2s;
+/* 搭配理由 */
+.outfit-reason {
+  font-size: 13px; color: #444; line-height: 1.7;
+  margin-bottom: 14px;
 }
-.favorite-btn.saved {
-  color: #999;
-  border-color: #CCC;
-  cursor: default;
+
+/* 单品清单 */
+.outfit-items-list { border-top: 1px solid #F0F0F0; padding-top: 12px; }
+.outfit-item-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0; border-bottom: 1px solid #F8F8F8;
 }
+.outfit-item-left { display: flex; align-items: center; gap: 10px; }
+.outfit-item-dot {
+  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+.outfit-item-name { font-size: 14px; color: #1A1A1A; font-weight: 300; }
+.outfit-item-type { font-size: 12px; color: #999; }
+
+/* 底部操作栏 */
+.outfit-actions {
+  display: flex; gap: 8px; margin-top: 16px;
+}
+.action-btn {
+  flex: 1; height: 44px; border-radius: 10px;
+  font-size: 13px; font-weight: 400; font-family: inherit;
+  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+.tryon-btn { background: #FFF5F2; color: #E8805A; border: 1px solid #F5C4B0; flex: 1.3; }
+.fav-btn { background: #fff; color: #555; border: 1px solid #E0E0E0; }
+.wear-btn { background: #fff; color: #E8805A; border: 1px solid #E8805A; }
+.fav-btn.saved { color: #E8805A; }
+.wear-btn.worn { background: #E8805A; color: #fff; }
+
+/* === AI 试穿弹层 === */
+.tryon-overlay {
+  position: fixed; top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.6); z-index: 400;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+.tryon-overlay.open { opacity: 1; pointer-events: auto; }
+
+.tryon-modal {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
+  width: 100%; max-width: 390px;
+  background: #fff; border-radius: 24px 24px 0 0;
+  padding: 20px 20px 32px; z-index: 401;
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  max-height: 92vh; overflow-y: auto;
+}
+.tryon-modal.open { transform: translateX(-50%) translateY(0); }
+
+.tryon-header {
+  display: flex; align-items: center; margin-bottom: 16px;
+}
+.tryon-title { font-size: 17px; font-weight: 600; color: #1A1A1A; flex: 1; }
+.tryon-demo-tag {
+  background: #FFF0EB; color: #E8805A;
+  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px;
+  margin-right: 10px;
+}
+.tryon-close { font-size: 20px; color: #999; cursor: pointer; padding: 4px; }
+
+.tryon-model-switch {
+  display: flex; background: #F5F5F5; border-radius: 10px; padding: 3px;
+  margin-bottom: 16px; gap: 3px;
+}
+.model-tab {
+  flex: 1; height: 36px; border-radius: 8px; border: none;
+  font-size: 12px; font-family: inherit; font-weight: 300;
+  background: transparent; color: #999; cursor: pointer; transition: all 0.2s;
+}
+.model-tab.active { background: #fff; color: #1A1A1A; font-weight: 400; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+
+.tryon-image-wrap {
+  width: 100%; aspect-ratio: 3/4; border-radius: 16px;
+  overflow: hidden; background: #F5F0EB; margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.tryon-placeholder-body { width: 80px; height: 160px; background: #D4C5B0; border-radius: 40px 40px 20px 20px; opacity: 0.4; }
+.tryon-loading-text { font-size: 16px; color: #999; text-align: center; margin-top: 12px; }
+.tryon-caption { font-size: 12px; color: #999; text-align: center; margin-bottom: 16px; }
+
+.tryon-actions { display: flex; gap: 8px; }
+.tryon-action-btn {
+  flex: 1; height: 48px; border-radius: 12px;
+  font-size: 14px; font-family: inherit; font-weight: 400;
+  cursor: pointer; transition: all 0.15s; display: flex;
+  align-items: center; justify-content: center; gap: 4px;
+  border: 1px solid #E0E0E0; background: #fff; color: #555;
+}
+.tryon-action-btn.primary { background: #E8805A; color: #fff; border-color: #E8805A; flex: 1.3; }
 
 /* 绿色提示条 */
 .toast-success {
@@ -560,20 +619,58 @@ body {
     <button class="ai-btn" id="aiBtn">✨ AI 帮我搭配</button>
 
     <!-- 5. 搭配结果 -->
-    <div class="result-section">
-      <div class="result-empty" id="resultEmpty">
-        <div class="icon">🧥</div>
-        <div class="text">选好条件，开始搭配</div>
+    <div class="result-area" id="resultArea">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">🧥</div>
+        <div class="empty-text">选好条件，开始搭配</div>
       </div>
-      <div class="result-loading" id="resultLoading">
-        <div class="skeleton"></div>
-        <div class="skeleton"></div>
-        <div class="skeleton"></div>
+      <div class="skeleton-area" id="skeletonArea" style="display:none;">
+        <div class="skeleton-card">
+          <div class="skeleton-block shimmer"></div>
+          <div class="skeleton-line shimmer"></div>
+          <div class="skeleton-line short shimmer"></div>
+        </div>
       </div>
-      <div class="result-content" id="resultContent">
-        <div class="result-summary" id="resultSummary"></div>
-        <div id="planCards"></div>
-        <button class="favorite-btn" id="favoriteBtn">❤️ 收藏当前搭配</button>
+      <div class="outfits-result" id="outfitsResult" style="display:none;">
+        <div class="outfit-title-row">
+          <div class="outfit-title-left">
+            <span class="outfit-star">✦</span>
+            <span class="outfit-title-text" id="outfitTitleText">为你生成的 3 套 · 第 1 套</span>
+          </div>
+          <span class="outfit-slide-hint">左右滑动切换</span>
+        </div>
+        <div class="outfits-swiper" id="outfitsSwiper"></div>
+        <div class="outfit-actions">
+          <button class="action-btn tryon-btn" id="tryOnBtn">⚡ 一键试穿</button>
+          <button class="action-btn fav-btn" id="favBtn">♡ 收藏</button>
+          <button class="action-btn wear-btn" id="wearBtn">✓ 就穿它</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI试穿弹层 -->
+    <div class="tryon-overlay" id="tryonOverlay"></div>
+    <div class="tryon-modal" id="tryonModal">
+      <div class="tryon-header">
+        <span class="tryon-title">✦ AI 一键试穿</span>
+        <span class="tryon-demo-tag">DEMO</span>
+        <span class="tryon-close" id="tryonClose">✕</span>
+      </div>
+      <div class="tryon-model-switch">
+        <button class="model-tab active" id="tabGeneral">👤 通用模特</button>
+        <button class="model-tab" id="tabSelf">👤 我本人 · 待上传</button>
+      </div>
+      <div class="tryon-image-wrap">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div class="tryon-placeholder-body"></div>
+          <div class="tryon-loading-text">连接 AI 生图后展示真实效果</div>
+        </div>
+      </div>
+      <div class="tryon-caption">通用模特上身效果（演示版）</div>
+      <div class="tryon-actions">
+        <button class="tryon-action-btn" id="tryonRegen">↻ 重新生成</button>
+        <button class="tryon-action-btn" id="tryonFavBtn">♡ 收藏</button>
+        <button class="tryon-action-btn primary" id="tryonWear">✓ 就穿它</button>
       </div>
     </div>
 
@@ -662,8 +759,6 @@ let selectedWeather = '多云';
 let selectedTemp = '16-25°';
 let weatherCity = '上海';
 let selectedItem = null;
-let selectedPlan = null;
-let isFavorited = false;
 
 // ============ DOM ============
 const occasionTagsEl = document.getElementById('occasionTags');
@@ -673,13 +768,6 @@ const pickupSelectedEl = document.getElementById('pickupSelected');
 const pickupSwatchEl = document.getElementById('pickupSwatch');
 const pickupNameEl = document.getElementById('pickupName');
 const pickupRemove = document.getElementById('pickupRemove');
-const aiBtn = document.getElementById('aiBtn');
-const resultEmpty = document.getElementById('resultEmpty');
-const resultLoading = document.getElementById('resultLoading');
-const resultContent = document.getElementById('resultContent');
-const resultSummary = document.getElementById('resultSummary');
-const planCards = document.getElementById('planCards');
-const favoriteBtn = document.getElementById('favoriteBtn');
 const toastSuccess = document.getElementById('toastSuccess');
 const drawerOverlay = document.getElementById('drawerOverlay');
 const drawerPanel = document.getElementById('drawerPanel');
@@ -888,149 +976,259 @@ pickupRemove.addEventListener('click', () => {
   pickupSelectedEl.classList.remove('show');
 });
 
-// ============ AI 搭配 ============
-aiBtn.addEventListener('click', () => {
-  // 切换到 loading
-  resultEmpty.style.display = 'none';
-  resultContent.style.display = 'none';
-  resultLoading.style.display = 'block';
-  favoriteBtn.style.display = 'none';
-  selectedPlan = null;
-  isFavorited = false;
-
-  setTimeout(() => {
-    resultLoading.style.display = 'none';
-    resultContent.style.display = 'block';
-    renderResults();
-  }, 1500);
-});
-
-function renderResults() {
-  const occasion = customOccasion || selectedOccasion;
-  resultSummary.textContent = `${occasion} · ${weatherCity} ${weatherDesc.textContent} 推荐`;
-
-  planCards.innerHTML = plans.map((p, i) => `
-    <div class="plan-card" data-plan="${i}">
-      <div class="plan-header">
-        <span class="plan-title">${p.name}</span>
-        <button class="plan-select-btn" data-plan="${i}">选择</button>
-      </div>
-      <div class="plan-items">
-        ${p.items.map(it => `
-          <div class="plan-item">
-            <div class="plan-swatch" style="background:${it.color}"></div>
-            <span class="plan-item-name">${it.name}</span>
-          </div>
-        `).join('')}
-      </div>
-      <div class="plan-reason">${p.reason}</div>
-    </div>
-  `).join('');
-
-  favoriteBtn.style.display = 'block';
-  favoriteBtn.textContent = '❤️ 收藏当前搭配';
-  favoriteBtn.classList.remove('saved');
-  isFavorited = false;
-}
-
-// ============ 选择方案 ============
-planCards.addEventListener('click', (e) => {
-  const btn = e.target.closest('.plan-select-btn');
-  if (!btn) return;
-  const idx = parseInt(btn.dataset.plan);
-
-  // 取消所有选中
-  planCards.querySelectorAll('.plan-card').forEach(c => {
-    c.classList.remove('selected');
-    c.style.opacity = '1';
-  });
-  planCards.querySelectorAll('.plan-select-btn').forEach(b => {
-    b.textContent = '选择';
-    b.classList.remove('is-selected');
-  });
-
-  // 选中当前
-  const card = planCards.querySelector(`.plan-card[data-plan="${idx}"]`);
-  card.classList.add('selected');
-  btn.textContent = '✓ 已选';
-  btn.classList.add('is-selected');
-
-  // 其他卡片变淡
-  planCards.querySelectorAll('.plan-card').forEach(c => {
-    if (c !== card) c.style.opacity = '0.5';
-  });
-
-  selectedPlan = idx;
-
-  // 保存到 localStorage
-  const occasion = customOccasion || selectedOccasion;
-  const todayOutfit = {
-    occasion: occasion,
-    weather: selectedWeather,
-    temp: selectedTemp,
-    plan: plans[idx],
-    selectedItem: selectedItem,
-    savedAt: new Date().toISOString()
-  };
-  localStorage.setItem('today_outfit', JSON.stringify(todayOutfit));
-
-  // 绿色提示条
-  showToastSuccess();
-});
-
-function showToastSuccess() {
-  toastSuccess.classList.add('show');
-  setTimeout(() => {
-    toastSuccess.classList.remove('show');
-  }, 2500);
-}
-
 // ============ Toast 提示 ============
 function showToast(msg) {
   const t = document.createElement('div');
   t.style.cssText = `
     position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
     background:rgba(0,0,0,0.75); color:#fff; padding:8px 18px;
-    border-radius:16px; font-size:12px; z-index:300; white-space:nowrap;
+    border-radius:16px; font-size:12px; z-index:500; white-space:nowrap;
   `;
   t.textContent = msg;
   document.body.appendChild(t);
   setTimeout(() => t.remove(), 2500);
 }
 
-// ============ 收藏 ============
-favoriteBtn.addEventListener('click', () => {
-  if (isFavorited) return;
-  const planIdx = selectedPlan !== null ? selectedPlan : 0;
-  const plan = plans[planIdx];
-  const occasion = customOccasion || selectedOccasion;
+function showToastSuccess() {
+  toastSuccess.classList.add('show');
+  setTimeout(() => { toastSuccess.classList.remove('show'); }, 2500);
+}
 
-  // 推断季节
-  let season = '春夏';
-  if (selectedTemp === '＜10°') season = '冬季';
-  else if (selectedTemp === '10-20°') season = '春秋';
-  else if (selectedTemp === '＞30°') season = '盛夏';
+// ============ 搭配结果 ============
+const outfitsResult = document.getElementById('outfitsResult');
+const outfitsSwiper = document.getElementById('outfitsSwiper');
+const outfitTitleText = document.getElementById('outfitTitleText');
+const skeletonArea = document.getElementById('skeletonArea');
+const emptyState = document.getElementById('emptyState');
+const tryOnBtn = document.getElementById('tryOnBtn');
+const favBtn = document.getElementById('favBtn');
+const wearBtn = document.getElementById('wearBtn');
 
-  const favItem = {
+// Mock 3套搭配数据
+const outfitsData = [
+  {
+    name: '方案一',
+    styles: ['极简', '职场'],
+    reason: '22°C的阴天通勤，这身极简职场风拿捏得刚好：白色衬衫利落大方，黑色西裤经典百搭，切尔西靴收尾干净不拖泥带水，整体清爽又不失正式感。',
+    items: [
+      { name: '白色宽松衬衫', type: '上装', color: '#E8E8E8', score: null },
+      { name: '黑色直筒西裤', type: '下装', color: '#2C2C2C', score: null },
+      { name: '黑色切尔西靴', type: '鞋履', color: '#1A1A1A', score: '85% · 极佳' }
+    ]
+  },
+  {
+    name: '方案二',
+    styles: ['休闲', '街头'],
+    reason: '22°C的天气穿这套刚刚好：灰色卫衣带点随性，深蓝牛仔裤经典百搭，切尔西靴提升整体质感，休闲中不失品位，走在街头自然有型。',
+    items: [
+      { name: '灰色圆领卫衣', type: '上装', color: '#9E9E9E', score: null },
+      { name: '深蓝牛仔裤', type: '下装', color: '#2B4B7A', score: null },
+      { name: '黑色切尔西靴', type: '鞋履', color: '#1A1A1A', score: '78% · 良好' }
+    ]
+  },
+  {
+    name: '方案三',
+    styles: ['简约', '通勤'],
+    reason: '白色衬衫搭深蓝牛仔裤，是永远不会出错的组合。衬衫微扎进裤腰可提升正式感，配切尔西靴整体感更强，轻松应对各种通勤场景。',
+    items: [
+      { name: '白色宽松衬衫', type: '上装', color: '#E8E8E8', score: null },
+      { name: '深蓝牛仔裤', type: '下装', color: '#2B4B7A', score: null },
+      { name: '黑色切尔西靴', type: '鞋履', color: '#1A1A1A', score: '80% · 良好' }
+    ]
+  }
+];
+
+// 衣物emoji图标（用于色块背景中的图标）
+const clothEmoji = { '上装': '👕', '下装': '👖', '鞋履': '👟', '外套': '🧥', '配饰': '👜' };
+
+let currentOutfitIndex = 0;
+
+function renderOutfits() {
+  outfitsSwiper.innerHTML = '';
+  outfitsData.forEach((outfit, idx) => {
+    const card = document.createElement('div');
+    card.className = 'outfit-card' + (idx === 0 ? ' active-card' : '');
+    card.dataset.index = idx;
+
+    // 三张衣物图
+    const clothRow = document.createElement('div');
+    clothRow.className = 'outfit-clothes-row';
+    outfit.items.forEach(item => {
+      const wrap = document.createElement('div');
+      wrap.className = 'outfit-cloth-item';
+      const imgBox = document.createElement('div');
+      imgBox.className = 'outfit-cloth-img';
+      imgBox.style.background = item.color;
+      imgBox.style.fontSize = '28px';
+      imgBox.textContent = clothEmoji[item.type] || '👔';
+      wrap.appendChild(imgBox);
+      if (item.score) {
+        const tag = document.createElement('div');
+        tag.className = 'cloth-score-tag';
+        tag.textContent = item.score;
+        wrap.appendChild(tag);
+      }
+      clothRow.appendChild(wrap);
+    });
+
+    // 风格标签
+    const tagRow = document.createElement('div');
+    tagRow.className = 'outfit-style-tags';
+    outfit.styles.forEach(s => {
+      const t = document.createElement('span');
+      t.className = 'outfit-style-tag';
+      t.textContent = s;
+      tagRow.appendChild(t);
+    });
+
+    // 理由
+    const reason = document.createElement('div');
+    reason.className = 'outfit-reason';
+    reason.textContent = outfit.reason;
+
+    // 单品清单
+    const list = document.createElement('div');
+    list.className = 'outfit-items-list';
+    outfit.items.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'outfit-item-row';
+      const left = document.createElement('div');
+      left.className = 'outfit-item-left';
+      const dot = document.createElement('div');
+      dot.className = 'outfit-item-dot';
+      dot.style.background = item.color;
+      const name = document.createElement('span');
+      name.className = 'outfit-item-name';
+      name.textContent = item.name;
+      left.appendChild(dot);
+      left.appendChild(name);
+      const type = document.createElement('span');
+      type.className = 'outfit-item-type';
+      type.textContent = item.type;
+      row.appendChild(left);
+      row.appendChild(type);
+      list.appendChild(row);
+    });
+
+    card.appendChild(clothRow);
+    card.appendChild(tagRow);
+    card.appendChild(reason);
+    card.appendChild(list);
+    outfitsSwiper.appendChild(card);
+  });
+
+  // 滑动监听，更新标题
+  outfitsSwiper.addEventListener('scroll', () => {
+    const scrollLeft = outfitsSwiper.scrollLeft;
+    const cardWidth = outfitsSwiper.clientWidth;
+    const newIndex = Math.round(scrollLeft / (cardWidth + 12));
+    if (newIndex !== currentOutfitIndex) {
+      currentOutfitIndex = newIndex;
+      outfitTitleText.textContent = `为你生成的 3 套 · 第 ${currentOutfitIndex + 1} 套`;
+      document.querySelectorAll('.outfit-card').forEach((c, i) => {
+        c.classList.toggle('active-card', i === currentOutfitIndex);
+      });
+    }
+  }, { passive: true });
+}
+
+// 重新绑定 AI 搭配按钮
+const aiBtn = document.getElementById('aiBtn');
+if (aiBtn) {
+  // 移除旧监听（克隆替换）
+  const newAiBtn = aiBtn.cloneNode(true);
+  aiBtn.parentNode.replaceChild(newAiBtn, aiBtn);
+  newAiBtn.addEventListener('click', () => {
+    emptyState.style.display = 'none';
+    outfitsResult.style.display = 'none';
+    skeletonArea.style.display = 'block';
+    setTimeout(() => {
+      skeletonArea.style.display = 'none';
+      outfitsResult.style.display = 'block';
+      currentOutfitIndex = 0;
+      outfitTitleText.textContent = '为你生成的 3 套 · 第 1 套';
+      renderOutfits();
+      favBtn.textContent = '♡ 收藏';
+      favBtn.classList.remove('saved');
+      wearBtn.textContent = '✓ 就穿它';
+      wearBtn.classList.remove('worn');
+    }, 1500);
+  });
+}
+
+// 一键试穿
+const tryonOverlay = document.getElementById('tryonOverlay');
+const tryonModal = document.getElementById('tryonModal');
+const tryonClose = document.getElementById('tryonClose');
+const tabGeneral = document.getElementById('tabGeneral');
+const tabSelf = document.getElementById('tabSelf');
+const tryonRegen = document.getElementById('tryonRegen');
+const tryonFavBtn = document.getElementById('tryonFavBtn');
+const tryonWear = document.getElementById('tryonWear');
+
+tryOnBtn.addEventListener('click', () => {
+  tryonOverlay.classList.add('open');
+  tryonModal.classList.add('open');
+});
+
+function closeTryon() {
+  tryonOverlay.classList.remove('open');
+  tryonModal.classList.remove('open');
+}
+tryonClose.addEventListener('click', closeTryon);
+tryonOverlay.addEventListener('click', closeTryon);
+
+tabGeneral.addEventListener('click', () => {
+  tabGeneral.classList.add('active');
+  tabSelf.classList.remove('active');
+});
+tabSelf.addEventListener('click', () => {
+  tabSelf.classList.add('active');
+  tabGeneral.classList.remove('active');
+  showToast('上传本人照片后可查看个人试穿效果');
+});
+
+tryonRegen.addEventListener('click', () => {
+  showToast('重新生成中（演示版）');
+});
+tryonFavBtn.addEventListener('click', () => {
+  showToast('已收藏试穿效果');
+  tryonFavBtn.textContent = '♡ 已收藏';
+});
+tryonWear.addEventListener('click', () => {
+  closeTryon();
+  wearBtn.textContent = '✓ 已选择';
+  wearBtn.classList.add('worn');
+  showToast('已记录今日穿搭 ✓');
+});
+
+// 收藏按钮
+favBtn.addEventListener('click', () => {
+  const outfit = outfitsData[currentOutfitIndex];
+  const item = {
     id: Date.now(),
-    outfitName: plan.name,
-    items: plan.items.map(it => ({ ...it })),
-    occasion: occasion,
-    weather: selectedWeather,
-    tags: [occasion, season],
+    outfitName: outfit.name,
+    items: outfit.items.map(i => ({ name: i.name, color: i.color })),
+    occasion: '职场',
+    weather: '晴天',
+    tags: outfit.styles,
     savedAt: new Date().toISOString()
   };
-
   let favorites = [];
-  try {
-    favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-  } catch (e) { favorites = []; }
-  favorites.push(favItem);
+  try { favorites = JSON.parse(localStorage.getItem('favorites') || '[]'); } catch(e){}
+  favorites.unshift(item);
   localStorage.setItem('favorites', JSON.stringify(favorites));
+  favBtn.textContent = '❤️ 已收藏';
+  favBtn.classList.add('saved');
+  showToast('已收藏到「收藏」页');
+});
 
-  favoriteBtn.textContent = '已收藏 ❤️';
-  favoriteBtn.classList.add('saved');
-  isFavorited = true;
+// 就穿它
+wearBtn.addEventListener('click', () => {
+  localStorage.setItem('today_outfit', JSON.stringify(outfitsData[currentOutfitIndex]));
+  wearBtn.textContent = '✓ 已选择';
+  wearBtn.classList.add('worn');
+  showToast('今日穿搭已记录 ✓');
 });
 </script>
 </body>
