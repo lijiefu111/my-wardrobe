@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>收藏 - 私人衣橱</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'Helvetica Neue', 'PingFang SC', sans-serif;
+    background: #F5F5F5;
+    color: #000;
+    font-weight: 300;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .app {
+    max-width: 390px;
+    margin: 0 auto;
+    background: #fff;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* ===== 顶部导航 ===== */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    height: 48px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    letter-spacing: 0.3em;
+    font-weight: 300;
+    z-index: 100;
+    border-bottom: 1px solid #E0E0E0;
+  }
+
+  /* ===== 筛选标签区 ===== */
+  .filter-bar {
+    position: fixed;
+    top: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    background: #fff;
+    border-bottom: 1px solid #E0E0E0;
+    padding: 10px 16px;
+    z-index: 99;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+
+  .filter-tags {
+    display: inline-flex;
+    gap: 8px;
+  }
+  .filter-tag {
+    display: inline-block;
+    padding: 4px 14px;
+    font-size: 13px;
+    font-weight: 300;
+    border: 1px solid #E0E0E0;
+    border-radius: 2px;
+    color: #666;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .filter-tag.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+
+  /* ===== 主内容区 ===== */
+  .content {
+    padding-top: 100px;
+    padding-bottom: 80px;
+    min-height: 100vh;
+  }
+
+  /* ===== 空状态 ===== */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 0;
+  }
+  .empty-state .emoji { font-size: 32px; margin-bottom: 12px; }
+  .empty-state .text { font-size: 14px; color: #999; margin-bottom: 8px; }
+  .empty-state .link {
+    font-size: 12px;
+    color: #000;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  /* ===== 筛选结果为空提示 ===== */
+  .filter-empty {
+    text-align: center;
+    padding: 60px 0;
+    font-size: 14px;
+    color: #999;
+  }
+
+  /* ===== 收藏卡片 ===== */
+  .fav-card {
+    margin: 12px 16px;
+    border: 1px solid #E0E0E0;
+    border-radius: 2px;
+    padding: 16px;
+  }
+
+  .fav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .fav-name {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .fav-unsave {
+    font-size: 12px;
+    color: #999;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-weight: 300;
+    padding: 0;
+  }
+
+  /* 衣物色块 */
+  .fav-items {
+    display: flex;
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .fav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .fav-color-block {
+    width: 44px;
+    height: 60px;
+    border-radius: 2px;
+    border: 1px solid #E0E0E0;
+  }
+  .fav-item-name {
+    font-size: 10px;
+    color: #999;
+    margin-top: 4px;
+    text-align: center;
+    max-width: 56px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* 标签 */
+  .fav-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .fav-tag {
+    border: 1px solid #E0E0E0;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: #666;
+    border-radius: 2px;
+  }
+
+  /* 底部 */
+  .fav-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #F5F5F5;
+  }
+  .fav-date {
+    font-size: 10px;
+    color: #999;
+  }
+  .fav-wear-btn {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 300;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+  /* ===== 底部 Tab 栏 ===== */
+  .tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    height: 60px;
+    background: #fff;
+    border-top: 1px solid #E0E0E0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+  }
+  .tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    text-decoration: none;
+    color: #999;
+    font-size: 10px;
+    font-weight: 300;
+    cursor: pointer;
+    padding: 6px 12px;
+  }
+  .tab-item .tab-icon { font-size: 20px; }
+  .tab-item.active { color: #000; }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- 顶部导航 -->
+  <div class="nav">WARDROBE</div>
+
+  <!-- 筛选标签 -->
+  <div class="filter-bar">
+    <div class="filter-tags" id="filterTags">
+      <span class="filter-tag active" data-tag="全部">全部</span>
+      <span class="filter-tag" data-tag="日常">日常</span>
+      <span class="filter-tag" data-tag="职场">职场</span>
+      <span class="filter-tag" data-tag="约会">约会</span>
+      <span class="filter-tag" data-tag="聚会">聚会</span>
+      <span class="filter-tag" data-tag="运动">运动</span>
+      <span class="filter-tag" data-tag="旅行">旅行</span>
+      <span class="filter-tag" data-tag="春">春</span>
+      <span class="filter-tag" data-tag="夏">夏</span>
+      <span class="filter-tag" data-tag="秋">秋</span>
+      <span class="filter-tag" data-tag="冬">冬</span>
+    </div>
+  </div>
+
+  <!-- 主内容 -->
+  <div class="content" id="content">
+    <!-- 动态渲染 -->
+  </div>
+
+  <!-- 底部 Tab -->
+  <div class="tab-bar">
+    <a class="tab-item" href="index.html"><span class="tab-icon">👗</span><span>衣橱</span></a>
+    <a class="tab-item" href="outfit.html"><span class="tab-icon">✨</span><span>搭配</span></a>
+    <a class="tab-item" href="shop.html"><span class="tab-icon">🛍</span><span>购物</span></a>
+    <a class="tab-item active" href="favorites.html"><span class="tab-icon">❤️</span><span>收藏</span></a>
+  </div>
+</div>
+
+<script>
+// ===== Mock 数据 =====
+const MOCK_FAVORITES = [
+  {
+    id: 1,
+    outfitName: '职场通勤',
+    items: [
+      { name: '白色衬衫', color: '#E8E8E8' },
+      { name: '黑色西裤', color: '#2C2C2C' },
+      { name: '切尔西靴', color: '#1A1A1A' }
+    ],
+    occasion: '职场',
+    weather: '晴天',
+    tags: ['职场', '秋', '简约'],
+    savedAt: '2026-05-04T09:00:00Z'
+  },
+  {
+    id: 2,
+    outfitName: '日常休闲',
+    items: [
+      { name: '灰色卫衣', color: '#9E9E9E' },
+      { name: '深蓝牛仔裤', color: '#2B4B7A' },
+      { name: '切尔西靴', color: '#1A1A1A' }
+    ],
+    occasion: '日常',
+    weather: '阴天',
+    tags: ['日常', '春', '休闲'],
+    savedAt: '2026-05-03T14:00:00Z'
+  },
+  {
+    id: 3,
+    outfitName: '周末约会',
+    items: [
+      { name: '米色大衣', color: '#D4C5B0' },
+      { name: '深蓝牛仔裤', color: '#2B4B7A' },
+      { name: '白色衬衫', color: '#E8E8E8' }
+    ],
+    occasion: '约会',
+    weather: '晴天',
+    tags: ['约会', '冬', '优雅'],
+    savedAt: '2026-05-02T18:00:00Z'
+  }
+];
+
+// ===== 状态管理 =====
+let activeTags = ['全部'];
+
+function loadFavorites() {
+  const stored = localStorage.getItem('favorites');
+  let storedList = [];
+  if (stored) {
+    try { storedList = JSON.parse(stored); } catch (e) { storedList = []; }
+  }
+  // localStorage 数据在前，mock 在后（去重：同 id 跳过 mock）
+  const storedIds = new Set(storedList.map(f => f.id));
+  const merged = [...storedList];
+  for (const m of MOCK_FAVORITES) {
+    if (!storedIds.has(m.id)) merged.push(m);
+  }
+  return merged;
+}
+
+function formatDateTime(iso) {
+  const d = new Date(iso);
+  const y = d.getFullYear();
+  const mo = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}.${mo}.${day}`;
+}
+
+function getFiltered(favorites) {
+  if (activeTags.includes('全部')) return favorites;
+  return favorites.filter(f =>
+    activeTags.every(t => f.tags && f.tags.includes(t))
+  );
+}
+
+// ===== 渲染 =====
+function render() {
+  const content = document.getElementById('content');
+  const allFavorites = loadFavorites();
+  const filtered = getFiltered(allFavorites);
+
+  // 空状态
+  if (allFavorites.length === 0) {
+    content.innerHTML = `
+      <div class="empty-state">
+        <div class="emoji">❤️</div>
+        <div class="text">还没有收藏的穿搭</div>
+        <a class="link" href="outfit.html">去搭配页试试</a>
+      </div>
+    `;
+    return;
+  }
+
+  if (filtered.length === 0) {
+    content.innerHTML = `
+      <div class="filter-empty">该分类暂无收藏</div>
+    `;
+    return;
+  }
+
+  let html = '';
+  for (const fav of filtered) {
+    // 衣物色块
+    let itemsHtml = '';
+    for (const item of fav.items) {
+      itemsHtml += `
+        <div class="fav-item">
+          <div class="fav-color-block" style="background:${item.color}"></div>
+          <div class="fav-item-name">${item.name}</div>
+        </div>
+      `;
+    }
+
+    // 标签
+    let tagsHtml = '';
+    for (const tag of (fav.tags || [])) {
+      tagsHtml += `<span class="fav-tag">${tag}</span>`;
+    }
+
+    html += `
+      <div class="fav-card" data-id="${fav.id}">
+        <div class="fav-header">
+          <span class="fav-name">${fav.outfitName}搭配</span>
+          <button class="fav-unsave" onclick="unsave(${fav.id})">取消收藏</button>
+        </div>
+        <div class="fav-items">${itemsHtml}</div>
+        <div class="fav-tags">${tagsHtml}</div>
+        <div class="fav-footer">
+          <span class="fav-date">${formatDateTime(fav.savedAt)}</span>
+          <button class="fav-wear-btn" onclick="wearOutfit(${fav.id})">穿这套</button>
+        </div>
+      </div>
+    `;
+  }
+
+  content.innerHTML = html;
+}
+
+// ===== 操作 =====
+function unsave(id) {
+  const stored = localStorage.getItem('favorites');
+  let storedList = [];
+  if (stored) {
+    try { storedList = JSON.parse(stored); } catch (e) { storedList = []; }
+  }
+  // 如果存在 localStorage 中，则从 localStorage 删除
+  const idx = storedList.findIndex(f => f.id === id);
+  if (idx !== -1) {
+    storedList.splice(idx, 1);
+    localStorage.setItem('favorites', JSON.stringify(storedList));
+  }
+  render();
+}
+
+function wearOutfit(id) {
+  window.location.href = 'outfit.html';
+}
+
+// ===== 筛选标签 =====
+document.getElementById('filterTags').addEventListener('click', function (e) {
+  const tag = e.target.getAttribute('data-tag');
+  if (!tag) return;
+
+  if (tag === '全部') {
+    activeTags = ['全部'];
+  } else {
+    // 移除「全部」
+    if (activeTags.includes('全部')) {
+      activeTags = activeTags.filter(t => t !== '全部');
+    }
+    if (activeTags.includes(tag)) {
+      activeTags = activeTags.filter(t => t !== tag);
+    } else {
+      activeTags.push(tag);
+    }
+    // 如果全部清除，回到「全部」
+    if (activeTags.length === 0) {
+      activeTags = ['全部'];
+    }
+  }
+
+  // 更新 UI
+  const allTags = document.querySelectorAll('.filter-tag');
+  allTags.forEach(t => {
+    const tTag = t.getAttribute('data-tag');
+    if (activeTags.includes(tTag)) {
+      t.classList.add('active');
+    } else {
+      t.classList.remove('active');
+    }
+  });
+
+  render();
+});
+
+// ===== 初始化 =====
+render();
+</script>
+</body>
+</html>
