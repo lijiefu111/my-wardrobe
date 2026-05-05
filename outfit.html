@@ -24,6 +24,69 @@ body {
   z-index: 100; border-bottom: 1px solid #F0F0F0;
 }
 .header h1 { font-size: 16px; font-weight: 300; letter-spacing: 0.3em; color: #000; }
+.header-profile-btn {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  width: 36px; height: 36px; border: none; background: none;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; transition: background 0.15s; padding: 0;
+}
+.header-profile-btn:active { background: #F5F5F5; }
+.header-profile-btn svg { width: 22px; height: 22px; stroke: #1A1A1A; fill: none; stroke-width: 1.5; stroke-linecap: round; }
+
+/* 个人信息弹层 */
+.profile-overlay {
+  position: fixed; top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.5); z-index: 500;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+.profile-overlay.open { opacity: 1; pointer-events: auto; }
+.profile-modal {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
+  width: 100%; max-width: 390px; background: #fff;
+  border-radius: 20px 20px 0 0; padding: 20px 20px 40px;
+  z-index: 501; transition: transform 0.35s cubic-bezier(0.32,0.72,0,1);
+  max-height: 85vh; overflow-y: auto;
+}
+.profile-modal.open { transform: translateX(-50%) translateY(0); }
+.profile-modal-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
+}
+.profile-modal-title { font-size: 17px; font-weight: 600; color: #1A1A1A; }
+.profile-modal-close { font-size: 22px; color: #999; cursor: pointer; padding: 4px; line-height: 1; }
+.profile-field { margin-bottom: 18px; }
+.profile-label { font-size: 12px; color: #999; margin-bottom: 6px; }
+.profile-input {
+  width: 100%; height: 46px; padding: 0 14px;
+  border: 1px solid #E8E8E8; border-radius: 10px;
+  font-size: 15px; font-weight: 300; color: #1A1A1A;
+  font-family: inherit; outline: none; background: #fff; transition: border-color 0.15s;
+}
+.profile-input:focus { border-color: #1A1A1A; }
+.profile-gender-row { display: flex; gap: 10px; }
+.profile-gender-btn {
+  flex: 1; height: 46px; border: 1px solid #E8E8E8; border-radius: 10px;
+  font-size: 14px; font-family: inherit; background: #fff; color: #666;
+  cursor: pointer; transition: all 0.15s;
+}
+.profile-gender-btn.active { border-color: #1A1A1A; background: #1A1A1A; color: #fff; }
+.profile-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.profile-save-btn {
+  width: 100%; height: 50px; background: #1A1A1A; color: #fff;
+  border: none; border-radius: 12px; font-size: 16px; font-family: inherit;
+  cursor: pointer; margin-top: 8px; transition: opacity 0.15s;
+}
+.profile-save-btn:active { opacity: 0.8; }
+.profile-avatar-row {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+  padding-bottom: 20px; border-bottom: 1px solid #F0F0F0;
+}
+.profile-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #F0F0F0; display: flex; align-items: center; justify-content: center;
+  font-size: 26px; flex-shrink: 0;
+}
+.profile-avatar-info .profile-name { font-size: 16px; font-weight: 500; color: #1A1A1A; }
+.profile-avatar-info .profile-sub { font-size: 12px; color: #999; margin-top: 2px; }
 
 /* ── Content ── */
 .content { padding-top: 48px; }
@@ -395,7 +458,12 @@ body {
 <div class="app">
 
   <!-- 顶部导航 -->
-  <header class="header"><h1>WARDROBE</h1></header>
+  <header class="header">
+    <h1>WARDROBE</h1>
+    <button class="header-profile-btn" id="profileBtn" aria-label="个人信息">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    </button>
+  </header>
 
   <div class="content">
 
@@ -538,6 +606,58 @@ body {
     </div>
   </div>
 
+  <!-- 个人信息弹层 -->
+  <div class="profile-overlay" id="profileOverlay"></div>
+  <div class="profile-modal" id="profileModal">
+    <div class="profile-modal-header">
+      <span class="profile-modal-title">我的信息</span>
+      <span class="profile-modal-close" id="profileClose">✕</span>
+    </div>
+    <div class="profile-avatar-row">
+      <div class="profile-avatar" id="profileAvatar">👤</div>
+      <div class="profile-avatar-info">
+        <div class="profile-name" id="profileNameDisplay">未填写昵称</div>
+        <div class="profile-sub" id="profileSubDisplay">完善信息，让 AI 更了解你</div>
+      </div>
+    </div>
+    <div class="profile-field">
+      <div class="profile-label">昵称</div>
+      <input class="profile-input" id="pNickname" type="text" placeholder="你的名字">
+    </div>
+    <div class="profile-field">
+      <div class="profile-label">性别</div>
+      <div class="profile-gender-row">
+        <button class="profile-gender-btn active" data-gender="female">👩 女</button>
+        <button class="profile-gender-btn" data-gender="male">👨 男</button>
+        <button class="profile-gender-btn" data-gender="other">🧑 其他</button>
+      </div>
+    </div>
+    <div class="profile-field">
+      <div class="profile-label">年龄</div>
+      <input class="profile-input" id="pAge" type="number" placeholder="例：23" min="10" max="80">
+    </div>
+    <div class="profile-field">
+      <div class="profile-label">身高 / 体重</div>
+      <div class="profile-row2">
+        <input class="profile-input" id="pHeight" type="number" placeholder="身高 cm">
+        <input class="profile-input" id="pWeight" type="number" placeholder="体重 kg">
+      </div>
+    </div>
+    <div class="profile-field">
+      <div class="profile-label">三围（选填，cm）</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <input class="profile-input" id="pBust" type="number" placeholder="胸围">
+        <input class="profile-input" id="pWaist" type="number" placeholder="腰围">
+        <input class="profile-input" id="pHip" type="number" placeholder="臀围">
+      </div>
+    </div>
+    <div class="profile-field">
+      <div class="profile-label">风格偏好</div>
+      <input class="profile-input" id="pStyle" type="text" placeholder="例：极简、街头、法式…">
+    </div>
+    <button class="profile-save-btn" id="profileSave">保存信息</button>
+  </div>
+
   <!-- 城市弹窗 -->
   <div class="city-overlay" id="cityOverlay"></div>
   <div class="city-modal" id="cityModal">
@@ -598,27 +718,27 @@ var outfitsData = [
     name: '方案一', styles: ['极简', '职场'],
     reason: '阴天通勤的最优解：白色衬衫利落大方，黑色西裤经典百搭，切尔西靴收尾干净，整体清爽不失正式感。',
     items: [
-      { name: '白色宽松衬衫', type: '上装', color: '#E8E8E8', emoji: '👕', score: null },
-      { name: '黑色直筒西裤', type: '下装', color: '#2C2C2C', emoji: '👖', score: null },
-      { name: '黑色切尔西靴', type: '鞋履', color: '#1A1A1A', emoji: '👟', score: '85% · 极佳' }
+      { name: '白色宽松衬衫', type: '上装', color: '#E8E8E8', img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80', score: null },
+      { name: '黑色直筒西裤', type: '下装', color: '#2C2C2C', img: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&q=80', score: null },
+      { name: '黑色切尔西靴', type: '鞋履', color: '#1A1A1A', img: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&q=80', score: '85% · 极佳' }
     ]
   },
   {
     name: '方案二', styles: ['休闲', '街头'],
     reason: '灰色卫衣带点随性，深蓝牛仔裤经典百搭，切尔西靴提升整体质感，休闲中不失品位，走在街头自然有型。',
     items: [
-      { name: '灰色圆领卫衣', type: '上装', color: '#9E9E9E', emoji: '👕', score: null },
-      { name: '深蓝牛仔裤', type: '下装', color: '#2B4B7A', emoji: '👖', score: null },
-      { name: '黑色切尔西靴', type: '鞋履', color: '#1A1A1A', emoji: '👟', score: '78% · 良好' }
+      { name: '灰色圆领卫衣', type: '上装', color: '#9E9E9E', img: 'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=400&q=80', score: null },
+      { name: '深蓝牛仔裤', type: '下装', color: '#2B4B7A', img: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&q=80', score: null },
+      { name: '黑色切尔西靴', type: '鞋履', color: '#1A1A1A', img: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400&q=80', score: '78% · 良好' }
     ]
   },
   {
     name: '方案三', styles: ['简约', '通勤'],
     reason: '白色衬衫配深蓝牛仔裤，永远不会出错的组合。衬衫微扎进裤腰可提升正式感，轻松应对各种通勤场景。',
     items: [
-      { name: '白色宽松衬衫', type: '上装', color: '#E8E8E8', emoji: '👕', score: null },
-      { name: '深蓝牛仔裤', type: '下装', color: '#2B4B7A', emoji: '👖', score: null },
-      { name: '黑色切尔西靴', type: '鞋履', color: '#1A1A1A', emoji: '👟', score: '80% · 良好' }
+      { name: '白色宽松衬衫', type: '上装', color: '#E8E8E8', img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80', score: null },
+      { name: '深蓝牛仔裤', type: '下装', color: '#2B4B7A', img: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&q=80', score: null },
+      { name: '白色运动鞋', type: '鞋履', color: '#F5F5F5', img: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=400&q=80', score: '80% · 良好' }
     ]
   }
 ];
@@ -912,8 +1032,12 @@ function renderOutfits() {
       wrap.className = 'outfit-cloth-item';
       var imgBox = document.createElement('div');
       imgBox.className = 'outfit-cloth-img';
-      imgBox.style.background = item.color;
-      imgBox.textContent = item.emoji;
+      if (item.img) {
+        imgBox.style.background = 'url(' + item.img + ') center/cover no-repeat, ' + item.color;
+      } else {
+        imgBox.style.background = item.color;
+        imgBox.textContent = item.emoji || '';
+      }
       wrap.appendChild(imgBox);
       if (item.score) {
         var scoreTag = document.createElement('div');
@@ -1062,6 +1186,95 @@ wearBtn.addEventListener('click', function() {
   localStorage.setItem('wear_count', JSON.stringify(wearCount));
   wearBtn.textContent = '✓ 已选择'; wearBtn.classList.add('worn');
   showToast('今日穿搭已记录，衣橱次数 +1 ✓');
+});
+
+// ── 个人信息 ──
+var profileOverlay = document.getElementById('profileOverlay');
+var profileModal = document.getElementById('profileModal');
+var profileBtn = document.getElementById('profileBtn');
+var profileClose = document.getElementById('profileClose');
+var profileSave = document.getElementById('profileSave');
+var pNickname = document.getElementById('pNickname');
+var pAge = document.getElementById('pAge');
+var pHeight = document.getElementById('pHeight');
+var pWeight = document.getElementById('pWeight');
+var pBust = document.getElementById('pBust');
+var pWaist = document.getElementById('pWaist');
+var pHip = document.getElementById('pHip');
+var pStyle = document.getElementById('pStyle');
+var profileNameDisplay = document.getElementById('profileNameDisplay');
+var profileSubDisplay = document.getElementById('profileSubDisplay');
+var profileAvatar = document.getElementById('profileAvatar');
+var selectedGender = 'female';
+
+// 加载已保存的信息
+function loadProfile() {
+  var p = {};
+  try { p = JSON.parse(localStorage.getItem('user_profile') || '{}'); } catch(e) {}
+  if (p.nickname) pNickname.value = p.nickname;
+  if (p.age) pAge.value = p.age;
+  if (p.height) pHeight.value = p.height;
+  if (p.weight) pWeight.value = p.weight;
+  if (p.bust) pBust.value = p.bust;
+  if (p.waist) pWaist.value = p.waist;
+  if (p.hip) pHip.value = p.hip;
+  if (p.style) pStyle.value = p.style;
+  if (p.gender) {
+    selectedGender = p.gender;
+    document.querySelectorAll('.profile-gender-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.gender === selectedGender);
+    });
+  }
+  updateProfileDisplay(p);
+}
+
+function updateProfileDisplay(p) {
+  if (p.nickname) {
+    profileNameDisplay.textContent = p.nickname;
+    var sub = [];
+    if (p.height) sub.push(p.height + 'cm');
+    if (p.weight) sub.push(p.weight + 'kg');
+    profileSubDisplay.textContent = sub.length ? sub.join(' · ') : '完善信息，让 AI 更了解你';
+    var emoji = p.gender === 'male' ? '👨' : p.gender === 'other' ? '🧑' : '👩';
+    profileAvatar.textContent = emoji;
+  }
+}
+
+loadProfile();
+
+// 性别选择
+document.querySelectorAll('.profile-gender-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    selectedGender = btn.dataset.gender;
+    document.querySelectorAll('.profile-gender-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+  });
+});
+
+// 打开/关闭
+function openProfile() { profileOverlay.classList.add('open'); profileModal.classList.add('open'); }
+function closeProfile() { profileOverlay.classList.remove('open'); profileModal.classList.remove('open'); }
+profileBtn.addEventListener('click', openProfile);
+profileClose.addEventListener('click', closeProfile);
+profileOverlay.addEventListener('click', closeProfile);
+
+// 保存
+profileSave.addEventListener('click', function() {
+  var p = {
+    nickname: pNickname.value.trim(),
+    gender: selectedGender,
+    age: pAge.value,
+    height: pHeight.value,
+    weight: pWeight.value,
+    bust: pBust.value,
+    waist: pWaist.value,
+    hip: pHip.value,
+    style: pStyle.value.trim()
+  };
+  localStorage.setItem('user_profile', JSON.stringify(p));
+  updateProfileDisplay(p);
+  closeProfile();
+  showToast('个人信息已保存 ✓');
 });
 </script>
 </body>
