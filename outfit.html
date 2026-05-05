@@ -211,18 +211,15 @@ body {
 .outfit-title-text { font-size: 15px; font-weight: 600; color: #1A1A1A; }
 .outfit-slide-hint { font-size: 11px; color: #BBB; }
 
-/* 横向滑动 Swiper — 全屏宽，不压缩 */
+/* 结果卡片容器（静态，只显示1套） */
 .outfits-swiper {
-  display: flex;
-  overflow-x: auto; scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  display: block;
 }
-.outfits-swiper::-webkit-scrollbar { display: none; }
 
-/* 每套卡片 = 100% 宽，独占一屏 */
+/* 卡片 = 普通块级，不横向滑动 */
 .outfit-card {
-  min-width: 100%; scroll-snap-align: start;
-  flex-shrink: 0; padding: 0 16px 16px;
+  display: block;
+  padding: 0 16px 16px;
 }
 
 /* 三件衣物横排 — 3列等分 */
@@ -454,16 +451,16 @@ body {
         <div class="outfit-title-row">
           <div class="outfit-title-left">
             <span class="outfit-star">✦</span>
-            <span class="outfit-title-text" id="outfitTitleText">为你生成的 3 套 · 第 1 套</span>
+            <span class="outfit-title-text" id="outfitTitleText">今日推荐搭配</span>
           </div>
-          <span class="outfit-slide-hint">左右滑动切换</span>
+          <span class="outfit-slide-hint"></span>
         </div>
 
         <!-- 横向滑动 Swiper -->
         <div class="outfits-swiper" id="outfitsSwiper"></div>
 
-        <!-- 圆点指示器 -->
-        <div class="outfit-dots" id="outfitDots">
+        <!-- 圆点指示器（暂隐藏，当前只显示1套） -->
+        <div class="outfit-dots" id="outfitDots" style="display:none;">
           <div class="outfit-dot active"></div>
           <div class="outfit-dot"></div>
           <div class="outfit-dot"></div>
@@ -780,7 +777,11 @@ pickupRemove.addEventListener('click', function() {
 // ── 渲染搭配卡片 ──
 function renderOutfits() {
   outfitsSwiper.innerHTML = '';
-  outfitsData.forEach(function(outfit, idx) {
+  // 只渲染第1套（index 0），静态展示不滑动
+  var outfit = outfitsData[0];
+  currentOutfitIndex = 0;
+  (function() {
+    var idx = 0;
     var card = document.createElement('div');
     card.className = 'outfit-card';
     card.dataset.index = idx;
@@ -851,17 +852,7 @@ function renderOutfits() {
     card.appendChild(reason);
     card.appendChild(list);
     outfitsSwiper.appendChild(card);
-  });
-
-  // 滑动更新圆点和标题
-  outfitsSwiper.addEventListener('scroll', function() {
-    var newIdx = Math.round(outfitsSwiper.scrollLeft / outfitsSwiper.clientWidth);
-    if (newIdx !== currentOutfitIndex && newIdx >= 0 && newIdx < outfitsData.length) {
-      currentOutfitIndex = newIdx;
-      outfitTitleText.textContent = '为你生成的 3 套 · 第 ' + (currentOutfitIndex + 1) + ' 套';
-      outfitDots.forEach(function(d, i) { d.classList.toggle('active', i === currentOutfitIndex); });
-    }
-  }, { passive: true });
+  }());
 }
 
 // ── AI生成按钮 ──
@@ -875,8 +866,7 @@ aiBtn.addEventListener('click', function() {
     skeletonArea.style.display = 'none';
     outfitsResult.style.display = 'block';
     currentOutfitIndex = 0;
-    outfitTitleText.textContent = '为你生成的 3 套 · 第 1 套';
-    outfitDots.forEach(function(d, i) { d.classList.toggle('active', i === 0); });
+    outfitTitleText.textContent = '今日推荐搭配';
     renderOutfits();
   }, 1500);
 });
