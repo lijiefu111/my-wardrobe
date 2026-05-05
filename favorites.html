@@ -386,9 +386,12 @@ function render() {
     // 衣物色块
     let itemsHtml = '';
     for (const item of fav.items) {
+      const blockStyle = item.img
+        ? `background:url(${item.img}) center/cover no-repeat`
+        : `background:${item.color}`;
       itemsHtml += `
         <div class="fav-item">
-          <div class="fav-color-block" style="background:${item.color}"></div>
+          <div class="fav-color-block" style="${blockStyle}"></div>
           <div class="fav-item-name">${item.name}</div>
         </div>
       `;
