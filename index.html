@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>WARDROBE</title>
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #F5F5F5;
+    color: #000;
+    overflow-x: hidden;
+  }
+
+  /* === Phone Frame === */
+  .phone-frame {
+    max-width: 390px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* === Top Navigation (fixed) === */
+  .top-nav {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    height: 44px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E0E0E0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+
+  .top-nav-title {
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    color: #000;
+  }
+
+  .top-nav-add {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 300;
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* === Main Scrollable Area === */
+  .main-scroll {
+    padding-top: 44px;
+    padding-bottom: 60px;
+    min-height: 100vh;
+  }
+
+  /* === Category Filter === */
+  .category-bar {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-bottom: 1px solid #F5F5F5;
+    background: #FFF;
+  }
+  .category-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-item {
+    flex-shrink: 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #666;
+    cursor: pointer;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .category-item.active {
+    background: #000;
+    color: #FFF;
+  }
+
+  /* === Stats === */
+  .stats-bar {
+    padding: 10px 16px;
+    font-size: 12px;
+    color: #999;
+    letter-spacing: 0.02em;
+  }
+
+  /* === Clothing Grid === */
+  .clothing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .clothing-card {
+    cursor: pointer;
+  }
+
+  .clothing-img {
+    width: 100%;
+    height: 180px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+  }
+
+  .clothing-name {
+    font-size: 12px;
+    font-weight: 400;
+    color: #000;
+    margin-top: 6px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .clothing-meta {
+    font-size: 10px;
+    color: #999;
+    margin-top: 2px;
+    line-height: 1.3;
+  }
+
+  /* === Bottom Tab Bar === */
+  .tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    height: 60px;
+    background: #FFFFFF;
+    border-top: 1px solid #E0E0E0;
+    display: flex;
+    align-items: stretch;
+    z-index: 100;
+  }
+
+  .tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    min-height: 44px;
+    cursor: pointer;
+    gap: 2px;
+  }
+
+  .tab-icon {
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .tab-label {
+    font-size: 10px;
+    margin-top: 2px;
+    line-height: 1;
+  }
+
+  .tab-item.active .tab-label {
+    color: #000;
+  }
+
+  .tab-item.active .tab-icon {
+    filter: none;
+  }
+
+  .tab-item:not(.active) .tab-label {
+    color: #999;
+  }
+
+  .tab-item:not(.active) .tab-icon {
+    filter: grayscale(1) opacity(0.5);
+  }
+
+  /* === Empty State === */
+  .empty-state {
+    text-align: center;
+    padding: 60px 32px;
+    color: #999;
+    font-size: 13px;
+  }
+  .empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <span class="top-nav-title">WARDROBE</span>
+    <a href="add.html" class="top-nav-add" aria-label="添加衣物">+</a>
+  </nav>
+
+  <!-- Main Scrollable -->
+  <main class="main-scroll">
+    <!-- Category Filter -->
+    <div class="category-bar" id="categoryBar">
+      <div class="category-item active" data-cat="all">ALL</div>
+      <div class="category-item" data-cat="top">上衣</div>
+      <div class="category-item" data-cat="bottom">下装</div>
+      <div class="category-item" data-cat="outerwear">外套</div>
+      <div class="category-item" data-cat="shoes">鞋履</div>
+      <div class="category-item" data-cat="accessories">配饰</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar" id="statsBar"></div>
+
+    <!-- Clothing Grid -->
+    <div class="clothing-grid" id="clothingGrid"></div>
+  </main>
+
+  <!-- Bottom Tab Bar -->
+  <div class="tab-bar">
+    <a href="index.html" class="tab-item active">
+      <span class="tab-icon">👗</span>
+      <span class="tab-label">衣橱</span>
+    </a>
+    <a href="outfit.html" class="tab-item">
+      <span class="tab-icon">✨</span>
+      <span class="tab-label">搭配</span>
+    </a>
+    <a href="shop.html" class="tab-item">
+      <span class="tab-icon">🛍</span>
+      <span class="tab-label">购物</span>
+    </a>
+  </div>
+</div>
+
+<script>
+(function() {
+  // === Mock Data ===
+  const mockItems = [
+    { id: 1, name: '白色宽松衬衫', category: 'top', season: 'spring', color: '白色', bg: '#E8E8E8', emoji: '👔' },
+    { id: 2, name: '黑色直筒西裤', category: 'bottom', season: 'autumn', color: '黑色', bg: '#2C2C2C', emoji: '👖' },
+    { id: 3, name: '米色羊毛大衣', category: 'outerwear', season: 'winter', color: '米色', bg: '#D4C5B0', emoji: '🧥' },
+    { id: 4, name: '深蓝牛仔裤', category: 'bottom', season: 'autumn', color: '深蓝', bg: '#2B4B7A', emoji: '👖' },
+    { id: 5, name: '灰色圆领卫衣', category: 'top', season: 'spring', color: '灰色', bg: '#9E9E9E', emoji: '👕' },
+    { id: 6, name: '黑色切尔西靴', category: 'shoes', season: 'winter', color: '黑色', bg: '#1A1A1A', emoji: '👢' },
+  ];
+
+  // === Load items from localStorage + mock ===
+  function loadItems() {
+    let stored = [];
+    try {
+      const raw = localStorage.getItem('wardrobe_items');
+      if (raw) {
+        stored = JSON.parse(raw);
+      }
+    } catch (e) {}
+    // Merge: stored items override mock by id
+    const map = {};
+    mockItems.forEach(item => map[item.id] = item);
+    stored.forEach(item => { if (item.id) map[item.id] = item; });
+    return Object.values(map);
+  }
+
+  // === Category filter ===
+  let activeCat = 'all';
+
+  const categoryBar = document.getElementById('categoryBar');
+  categoryBar.addEventListener('click', function(e) {
+    const item = e.target.closest('.category-item');
+    if (!item) return;
+    activeCat = item.dataset.cat;
+    categoryBar.querySelectorAll('.category-item').forEach(el => el.classList.remove('active'));
+    item.classList.add('active');
+    render();
+  });
+
+  // === Render ===
+  function render() {
+    const allItems = loadItems();
+    const filtered = activeCat === 'all' ? allItems : allItems.filter(i => i.category === activeCat);
+
+    // Stats
+    const total = allItems.length;
+    const springCount = allItems.filter(i => i.season === 'spring').length;
+    const autumnCount = allItems.filter(i => i.season === 'autumn' || i.season === 'winter').length;
+    const statsBar = document.getElementById('statsBar');
+    statsBar.textContent = `共 ${total} 件 · 春夏 ${springCount} 件 · 秋冬 ${autumnCount} 件`;
+
+    // Grid
+    const grid = document.getElementById('clothingGrid');
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👗</div>还没有衣物，点击 + 添加</div>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map(item => `
+      <div class="clothing-card" data-id="${item.id}">
+        <div class="clothing-img" style="background:${item.bg};color:${isLight(item.bg) ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)'}">${item.emoji || ''}</div>
+        <div class="clothing-name">${item.name}</div>
+        <div class="clothing-meta">${getCategoryLabel(item.category)} · ${item.color}</div>
+      </div>
+    `).join('');
+  }
+
+  function isLight(hex) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return (r * 299 + g * 587 + b * 114) / 1000 > 128;
+  }
+
+  function getCategoryLabel(cat) {
+    const labels = { top: '上衣', bottom: '下装', outerwear: '外套', shoes: '鞋履', accessories: '配饰' };
+    return labels[cat] || cat;
+  }
+
+  // === Init ===
+  render();
+})();
+</script>
+
+</body>
+</html>
