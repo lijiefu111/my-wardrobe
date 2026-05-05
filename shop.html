@@ -374,7 +374,9 @@ body {
   cursor: pointer;
 }
 .bottom-tab .tab.active { color: #000; }
-.bottom-tab .tab .icon { font-size: 22px; }
+.bottom-tab .tab .icon { font-size: 20px; line-height: 1; }
+.bottom-tab .tab.active .icon { filter: none; }
+.bottom-tab .tab:not(.active) .icon { filter: grayscale(1) opacity(0.45); }
 </style>
 </head>
 <body>
