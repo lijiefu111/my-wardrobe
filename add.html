@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>添加衣物 - 私人衣橱</title>
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      background: #F0F0F0;
+      color: #000000;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+
+    /* ── Phone frame ── */
+    .phone-frame {
+      max-width: 390px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      min-height: 100vh;
+      min-height: 100dvh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ── Fixed Header ── */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 390px;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      height: 52px;
+      min-height: 44px;
+      border-bottom: 1px solid #E0E0E0;
+      z-index: 100;
+    }
+
+    .header-back {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      cursor: pointer;
+      color: #000;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: #000;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .header-placeholder {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+    }
+
+    /* ── Scrollable Content ── */
+    .content {
+      padding: 52px 0 80px;
+    }
+
+    /* ── Upload Area ── */
+    .upload-area {
+      width: calc(100% - 32px);
+      margin: 16px auto;
+      aspect-ratio: 1 / 1;
+      max-height: 300px;
+      border: 2px dashed #E0E0E0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      background: #FFF;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .upload-area:active {
+      background: #FAFAFA;
+    }
+
+    .upload-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .upload-camera {
+      font-size: 48px;
+      line-height: 1;
+    }
+
+    .upload-main-text {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .upload-sub-text {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .upload-preview {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #FFF;
+      display: none;
+    }
+
+    /* ── AI Status Area ── */
+    .ai-status {
+      padding: 16px;
+      min-height: 50px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .ai-status.visible {
+      display: flex;
+    }
+
+    .ai-loading-text {
+      color: #999;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ai-dot-spinner {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .ai-dot-spinner span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #999;
+      animation: dotPulse 1.2s ease-in-out infinite;
+    }
+
+    .ai-dot-spinner span:nth-child(2) { animation-delay: 0.2s; }
+    .ai-dot-spinner span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes dotPulse {
+      0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+      40% { opacity: 1; transform: scale(1); }
+    }
+
+    /* ── Form Section ── */
+    .form-section {
+      display: none;
+      padding: 0 16px;
+    }
+
+    .form-section.visible {
+      display: block;
+    }
+
+    .form-row {
+      padding: 16px 0;
+      border-bottom: 1px solid #F0F0F0;
+    }
+
+    .form-label {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Tag buttons */
+    .tag-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 14px;
+      font-size: 13px;
+      font-weight: 300;
+      color: #000;
+      border: 1px solid #E0E0E0;
+      background: #FFF;
+      cursor: pointer;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .tag:active {
+      opacity: 0.7;
+    }
+
+    .tag.selected {
+      background: #000;
+      color: #FFF;
+      border-color: #000;
+    }
+
+    /* Color selector */
+    .color-selector {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .color-blocks {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .color-block {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.15s;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .color-block[data-value="白色"] {
+      border-color: #E0E0E0;
+    }
+
+    .color-block.selected {
+      border-color: #000;
+      transform: scale(1.1);
+    }
+
+    .color-block .check {
+      color: #FFF;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 1;
+      display: none;
+    }
+
+    .color-block.selected .check {
+      display: block;
+    }
+
+    .color-block[data-value="白色"] .check {
+      color: #000;
+    }
+
+    .color-name {
+      font-size: 13px;
+      color: #666;
+      min-width: 30px;
+    }
+
+    /* Note input */
+    .note-input {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid #E0E0E0;
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 300;
+      padding: 8px 0;
+      outline: none;
+      color: #000;
+      background: transparent;
+      -webkit-appearance: none;
+      border-radius: 0;
+    }
+
+    .note-input:focus {
+      border-bottom-color: #000;
+    }
+
+    .note-input::placeholder {
+      color: #CCC;
+    }
+
+    /* ── Sticky Bottom ── */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 390px;
+      background: #FFFFFF;
+      border-top: 1px solid #E0E0E0;
+      padding: 12px 16px;
+      padding-bottom: max(12px, env(safe-area-inset-bottom));
+      z-index: 100;
+    }
+
+    .btn-submit {
+      width: 100%;
+      height: 50px;
+      min-height: 44px;
+      background: #000;
+      color: #FFF;
+      border: none;
+      font-size: 16px;
+      font-weight: 400;
+      font-family: inherit;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-submit:active {
+      opacity: 0.75;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: rgba(0, 0, 0, 0.8);
+      color: #FFF;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 300;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 200;
+      pointer-events: none;
+      white-space: nowrap;
+      max-width: 80%;
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Responsive: on wider screens, center the phone frame ── */
+    @media (min-width: 391px) {
+      .phone-frame {
+        min-height: 100vh;
+        min-height: 100dvh;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Fixed Header -->
+    <div class="header">
+      <div class="header-back" id="btnBack" role="button" aria-label="返回">←</div>
+      <span class="header-title">添加衣物</span>
+      <div class="header-placeholder"></div>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="content">
+      <!-- Upload Area -->
+      <div class="upload-area" id="uploadArea">
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+        <div class="upload-placeholder" id="uploadPlaceholder">
+          <div class="upload-camera">📷</div>
+          <div class="upload-main-text">点击上传衣物图片</div>
+          <div class="upload-sub-text">支持 JPG、PNG</div>
+        </div>
+        <img class="upload-preview" id="previewImg" alt="衣物预览">
+      </div>
+
+      <!-- AI Status -->
+      <div class="ai-status" id="aiStatus">
+        <div class="ai-loading-text">
+          🤖 AI 正在识别
+          <div class="ai-dot-spinner">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Section -->
+      <div class="form-section" id="formSection">
+        <!-- 品类 - 单选 -->
+        <div class="form-row">
+          <div class="form-label">品类</div>
+          <div class="tag-group" id="categoryGroup" data-single="true">
+            <span class="tag selected" data-value="上衣">上衣</span>
+            <span class="tag" data-value="下装">下装</span>
+            <span class="tag" data-value="外套">外套</span>
+            <span class="tag" data-value="鞋履">鞋履</span>
+            <span class="tag" data-value="配饰">配饰</span>
+            <span class="tag" data-value="连衣裙">连衣裙</span>
+          </div>
+        </div>
+
+        <!-- 主色调 - 色块选择 -->
+        <div class="form-row">
+          <div class="form-label">主色调</div>
+          <div class="color-selector">
+            <div class="color-blocks" id="colorBlocks">
+              <span class="color-block selected" data-value="白色" style="background:#FFFFFF;" title="白色">
+                <span class="check">✓</span>
+              </span>
+              <span class="color-block" data-value="黑色" style="background:#000000;" title="黑色">
+                <span class="check">✓</span>
+              </span>
+              <span class="color-block" data-value="灰色" style="background:#9E9E9E;" title="灰色">
+                <span class="check">✓</span>
+              </span>
+              <span class="color-block" data-value="米色" style="background:#D4C5B0;" title="米色">
+                <span class="check">✓</span>
+              </span>
+              <span class="color-block" data-value="蓝色" style="background:#2B4B7A;" title="蓝色">
+                <span class="check">✓</span>
+              </span>
+              <span class="color-block" data-value="红色" style="background:#C0392B;" title="红色">
+                <span class="check">✓</span>
+              </span>
+              <span class="color-block" data-value="绿色" style="background:#27AE60;" title="绿色">
+                <span class="check">✓</span>
+              </span>
+              <span class="color-block" data-value="棕色" style="background:#795548;" title="棕色">
+                <span class="check">✓</span>
+              </span>
+            </div>
+            <span class="color-name" id="colorName">白色</span>
+          </div>
+        </div>
+
+        <!-- 风格 - 多选 -->
+        <div class="form-row">
+          <div class="form-label">风格</div>
+          <div class="tag-group" id="styleGroup">
+            <span class="tag selected" data-value="休闲">休闲</span>
+            <span class="tag" data-value="商务">商务</span>
+            <span class="tag selected" data-value="简约">简约</span>
+            <span class="tag" data-value="运动">运动</span>
+            <span class="tag" data-value="优雅">优雅</span>
+            <span class="tag" data-value="街头">街头</span>
+          </div>
+        </div>
+
+        <!-- 适用季节 - 多选 -->
+        <div class="form-row">
+          <div class="form-label">适用季节</div>
+          <div class="tag-group" id="seasonGroup">
+            <span class="tag selected" data-value="春">春</span>
+            <span class="tag selected" data-value="夏">夏</span>
+            <span class="tag selected" data-value="秋">秋</span>
+            <span class="tag" data-value="冬">冬</span>
+          </div>
+        </div>
+
+        <!-- 适用场合 - 多选 -->
+        <div class="form-row">
+          <div class="form-label">适用场合</div>
+          <div class="tag-group" id="occasionGroup">
+            <span class="tag selected" data-value="日常">日常</span>
+            <span class="tag" data-value="职场">职场</span>
+            <span class="tag" data-value="聚会">聚会</span>
+            <span class="tag" data-value="约会">约会</span>
+            <span class="tag" data-value="运动">运动</span>
+            <span class="tag" data-value="旅行">旅行</span>
+          </div>
+        </div>
+
+        <!-- 备注 -->
+        <div class="form-row" style="border-bottom: none;">
+          <div class="form-label">备注</div>
+          <input type="text" class="note-input" id="noteInput" placeholder="品牌、价格等（可选）" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky Bottom Bar -->
+    <div class="bottom-bar">
+      <button class="btn-submit" id="btnSubmit">确认入库</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ── Element refs ──
+      var btnBack = document.getElementById('btnBack');
+      var uploadArea = document.getElementById('uploadArea');
+      var fileInput = document.getElementById('fileInput');
+      var uploadPlaceholder = document.getElementById('uploadPlaceholder');
+      var previewImg = document.getElementById('previewImg');
+      var aiStatus = document.getElementById('aiStatus');
+      var formSection = document.getElementById('formSection');
+      var btnSubmit = document.getElementById('btnSubmit');
+      var noteInput = document.getElementById('noteInput');
+      var toast = document.getElementById('toast');
+      var colorName = document.getElementById('colorName');
+
+      var imageBase64 = null;
+      var aiTimer = null;
+
+      // ── Back navigation ──
+      btnBack.addEventListener('click', function () {
+        window.location.href = 'index.html';
+      });
+
+      // ── Tag click logic ──
+      document.querySelectorAll('.tag-group').forEach(function (group) {
+        var isSingle = group.getAttribute('data-single') === 'true';
+        group.querySelectorAll('.tag').forEach(function (tag) {
+          tag.addEventListener('click', function () {
+            if (isSingle) {
+              group.querySelectorAll('.tag').forEach(function (t) { t.classList.remove('selected'); });
+              tag.classList.add('selected');
+            } else {
+              tag.classList.toggle('selected');
+            }
+          });
+        });
+      });
+
+      // ── Color block click ──
+      document.querySelectorAll('.color-block').forEach(function (block) {
+        block.addEventListener('click', function () {
+          document.querySelectorAll('.color-block').forEach(function (b) {
+            b.classList.remove('selected');
+          });
+          block.classList.add('selected');
+          colorName.textContent = block.getAttribute('data-value');
+        });
+      });
+
+      // ── Upload area click ──
+      uploadArea.addEventListener('click', function (e) {
+        if (e.target === previewImg) {
+          // If preview is shown and user clicks on it, still allow re-upload
+          fileInput.click();
+          return;
+        }
+        fileInput.click();
+      });
+
+      fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) {
+          handleFile(fileInput.files[0]);
+        }
+      });
+
+      function handleFile(file) {
+        if (!file.type.match(/^image\/(jpeg|png|webp)$/i)) {
+          showToast('请上传 JPG 或 PNG 格式图片');
+          return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          imageBase64 = e.target.result;
+          previewImg.src = imageBase64;
+          previewImg.style.display = 'block';
+          uploadPlaceholder.style.display = 'none';
+          startAIRecognition();
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // ── AI Recognition (simulated, 3s total) ──
+      function startAIRecognition() {
+        aiStatus.classList.add('visible');
+        formSection.classList.remove('visible');
+
+        // State 2: show loading after upload
+        aiTimer = setTimeout(function () {
+          aiStatus.classList.remove('visible');
+          // State 3: show form
+          formSection.classList.add('visible');
+        }, 3000);
+      }
+
+      // ── Submit ──
+      btnSubmit.addEventListener('click', function () {
+        if (!imageBase64) {
+          showToast('请先上传衣物图片');
+          return;
+        }
+
+        // Gather category (single)
+        var categoryTag = document.querySelector('#categoryGroup .tag.selected');
+        var category = categoryTag ? categoryTag.getAttribute('data-value') : '上衣';
+
+        // Gather color
+        var colorBlock = document.querySelector('#colorBlocks .color-block.selected');
+        var colors = colorBlock ? [colorBlock.getAttribute('data-value')] : ['白色'];
+        var colorNameVal = colorBlock ? colorBlock.getAttribute('data-value') : '白色';
+
+        // Gather styles (multi)
+        var styles = [];
+        document.querySelectorAll('#styleGroup .tag.selected').forEach(function (t) {
+          styles.push(t.getAttribute('data-value'));
+        });
+
+        // Gather seasons (multi)
+        var seasons = [];
+        document.querySelectorAll('#seasonGroup .tag.selected').forEach(function (t) {
+          seasons.push(t.getAttribute('data-value'));
+        });
+
+        // Gather occasions (multi)
+        var occasions = [];
+        document.querySelectorAll('#occasionGroup .tag.selected').forEach(function (t) {
+          occasions.push(t.getAttribute('data-value'));
+        });
+
+        // Note
+        var note = noteInput.value.trim();
+
+        var item = {
+          id: Date.now(),
+          imageBase64: imageBase64,
+          category: category,
+          colors: colors,
+          colorName: colorNameVal,
+          styles: styles,
+          seasons: seasons,
+          occasions: occasions,
+          note: note,
+          addedAt: new Date().toISOString()
+        };
+
+        var items = [];
+        try {
+          var stored = localStorage.getItem('wardrobe_items');
+          if (stored) items = JSON.parse(stored);
+        } catch (e) { /* ignore */ }
+
+        items.push(item);
+        localStorage.setItem('wardrobe_items', JSON.stringify(items));
+
+        showToast('衣物已入库');
+        setTimeout(function () {
+          window.location.href = 'index.html';
+        }, 600);
+      });
+
+      // ── Toast ──
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(function () {
+          toast.classList.remove('show');
+        }, 2000);
+      }
+    })();
+  </script>
+</body>
+</html>
