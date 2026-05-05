@@ -1036,10 +1036,11 @@ favBtn.addEventListener('click', function() {
 wearBtn.addEventListener('click', function() {
   var outfit = outfitsData[currentOutfitIndex];
   localStorage.setItem('today_outfit', JSON.stringify(outfit));
-  // 记录每件单品穿着次数 → wear_count
+  // 记录每件单品穿着次数 → wear_count（同时用 id 和 name 两个 key 确保匹配）
   var wearCount = {};
   try { wearCount = JSON.parse(localStorage.getItem('wear_count') || '{}'); } catch(e) {}
   outfit.items.forEach(function(item) {
+    if (item.id) { wearCount[item.id] = (wearCount[item.id] || 0) + 1; }
     wearCount[item.name] = (wearCount[item.name] || 0) + 1;
   });
   localStorage.setItem('wear_count', JSON.stringify(wearCount));
