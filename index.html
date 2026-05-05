@@ -369,7 +369,7 @@
     const springCount = allItems.filter(i => i.season === 'spring').length;
     const autumnCount = allItems.filter(i => i.season === 'autumn' || i.season === 'winter').length;
     const statsBar = document.getElementById('statsBar');
-    statsBar.textContent = `共 ${total} 件 · 春夏 ${springCount} 件 · 秋冬 ${autumnCount} 件`;
+    statsBar.textContent = `共 ${total} 件`;
 
     // Grid
     const grid = document.getElementById('clothingGrid');
