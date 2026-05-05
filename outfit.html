@@ -132,13 +132,16 @@ body {
 }
 .pickup-btn:active { background: #EFEFEF; }
 .pickup-selected {
-  display: none; padding: 8px 12px; background: #F9F9F9;
-  border-radius: 8px; align-items: center; gap: 10px; margin-bottom: 4px;
+  display: none; flex-wrap: wrap; gap: 6px; margin-bottom: 4px;
 }
 .pickup-selected.show { display: flex; }
-.pickup-swatch { width: 22px; height: 22px; border-radius: 50%; border: 1px solid #E0E0E0; flex-shrink: 0; }
-.pickup-name { font-size: 13px; color: #333; flex: 1; }
-.pickup-remove { font-size: 18px; color: #BBB; cursor: pointer; padding: 2px 4px; }
+.pickup-chip {
+  display: flex; align-items: center; gap: 5px;
+  background: #F5F5F5; border-radius: 20px;
+  padding: 4px 10px 4px 8px; font-size: 12px; color: #333;
+}
+.pickup-chip-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.pickup-chip-remove { color: #BBB; font-size: 14px; cursor: pointer; margin-left: 2px; line-height: 1; }
 
 /* 抽屉 */
 .drawer-overlay {
@@ -150,25 +153,52 @@ body {
 .drawer-panel {
   position: fixed; bottom: 0; left: 50%;
   transform: translateX(-50%) translateY(100%);
-  width: 100%; max-width: 390px; max-height: 60vh;
-  background: #fff; border-radius: 16px 16px 0 0; padding: 20px;
-  z-index: 201; transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); overflow-y: auto;
+  width: 100%; max-width: 390px; max-height: 72vh;
+  background: #fff; border-radius: 16px 16px 0 0; padding: 20px 20px 0;
+  z-index: 201; transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
 }
 .drawer-panel.open { transform: translateX(-50%) translateY(0); }
-.drawer-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.drawer-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-shrink: 0; }
 .drawer-header h3 { font-size: 16px; font-weight: 600; }
 .drawer-close { font-size: 20px; cursor: pointer; color: #999; padding: 4px; }
-.drawer-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+/* 分类筛选条 */
+.drawer-cats {
+  display: flex; gap: 8px; margin-bottom: 14px; flex-shrink: 0;
+}
+.drawer-cat {
+  padding: 5px 14px; font-size: 12px; border-radius: 20px;
+  border: 1px solid #E0E0E0; color: #666; cursor: pointer; font-family: inherit;
+  background: #fff; transition: all 0.15s;
+}
+.drawer-cat.active { background: #1A1A1A; color: #fff; border-color: #1A1A1A; }
+/* 可滚动内容区 */
+.drawer-scroll { flex: 1; overflow-y: auto; }
+.drawer-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; padding-bottom: 8px; }
 .drawer-item {
   display: flex; flex-direction: column; align-items: center;
-  cursor: pointer; padding: 8px; border: 2px solid transparent; border-radius: 8px;
+  cursor: pointer; padding: 8px 4px; border: 2px solid transparent;
+  border-radius: 10px; position: relative; transition: border-color 0.15s;
 }
-.drawer-item.selected { border-color: #000; }
-.drawer-item .swatch { width: 60px; height: 80px; border-radius: 6px; margin-bottom: 6px; }
-.drawer-item .name { font-size: 12px; color: #666; text-align: center; }
+.drawer-item.selected { border-color: #1A1A1A; }
+.drawer-item .swatch { width: 100%; aspect-ratio: 3/4; border-radius: 8px; margin-bottom: 6px; }
+.drawer-item .name { font-size: 11px; color: #666; text-align: center; line-height: 1.3; }
+.drawer-item .cat-tag { font-size: 10px; color: #AAA; margin-top: 2px; }
+/* 多选勾 */
+.drawer-check {
+  position: absolute; top: 6px; right: 6px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #1A1A1A; color: #fff;
+  font-size: 11px; display: none; align-items: center; justify-content: center;
+}
+.drawer-item.selected .drawer-check { display: flex; }
+/* 底部固定区 */
+.drawer-footer { padding: 12px 0 20px; flex-shrink: 0; }
+.drawer-selected-count { font-size: 12px; color: #888; margin-bottom: 8px; text-align: center; }
 .drawer-confirm {
-  margin-top: 16px; width: 100%; height: 44px;
-  background: #000; color: #fff; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;
+  width: 100%; height: 46px;
+  background: #1A1A1A; color: #fff; border: none; border-radius: 10px;
+  font-size: 15px; font-family: inherit; cursor: pointer;
 }
 .drawer-confirm:disabled { background: #CCC; cursor: default; }
 
@@ -417,11 +447,7 @@ body {
         <span class="step-title">有没有特别想穿的单品？（可跳过）</span>
       </div>
       <button class="pickup-btn" id="pickupBtn">+ 从衣橱选择</button>
-      <div class="pickup-selected" id="pickupSelected">
-        <span class="pickup-swatch" id="pickupSwatch"></span>
-        <span class="pickup-name" id="pickupName"></span>
-        <span class="pickup-remove" id="pickupRemove">×</span>
-      </div>
+      <div class="pickup-selected" id="pickupSelected"></div>
     </div>
 
     <div class="step-divider" style="margin-bottom:0"></div>
@@ -491,11 +517,23 @@ body {
   <div class="drawer-overlay" id="drawerOverlay"></div>
   <div class="drawer-panel" id="drawerPanel">
     <div class="drawer-header">
-      <h3>选择单品</h3>
+      <h3>选择单品（可多选）</h3>
       <span class="drawer-close" id="drawerClose">✕</span>
     </div>
-    <div class="drawer-grid" id="drawerGrid"></div>
-    <button class="drawer-confirm" id="drawerConfirm" disabled>确认选择</button>
+    <div class="drawer-cats" id="drawerCats">
+      <button class="drawer-cat active" data-cat="全部">全部</button>
+      <button class="drawer-cat" data-cat="上装">上装</button>
+      <button class="drawer-cat" data-cat="下装">下装</button>
+      <button class="drawer-cat" data-cat="鞋履">鞋履</button>
+      <button class="drawer-cat" data-cat="外套">外套</button>
+    </div>
+    <div class="drawer-scroll">
+      <div class="drawer-grid" id="drawerGrid"></div>
+    </div>
+    <div class="drawer-footer">
+      <div class="drawer-selected-count" id="drawerCount">尚未选择</div>
+      <button class="drawer-confirm" id="drawerConfirm" disabled>确认选择</button>
+    </div>
   </div>
 
   <!-- 城市弹窗 -->
@@ -541,12 +579,16 @@ body {
 <script>
 // ── Mock 数据 ──
 var mockItems = [
-  { name: '白色衬衫', color: '#E8E8E8' },
-  { name: '灰色卫衣', color: '#9E9E9E' },
-  { name: '黑色西裤', color: '#2C2C2C' },
-  { name: '深蓝牛仔裤', color: '#2B4B7A' },
-  { name: '切尔西靴', color: '#1A1A1A' },
-  { name: '米色大衣', color: '#D4C5B0' }
+  { name: '白色衬衫', color: '#E8E8E8', category: '上装', emoji: '👕' },
+  { name: '灰色卫衣', color: '#9E9E9E', category: '上装', emoji: '👕' },
+  { name: '条纹T恤', color: '#D0D8E0', category: '上装', emoji: '👕' },
+  { name: '黑色西裤', color: '#2C2C2C', category: '下装', emoji: '👖' },
+  { name: '深蓝牛仔裤', color: '#2B4B7A', category: '下装', emoji: '👖' },
+  { name: '米白阔腿裤', color: '#E8E0D0', category: '下装', emoji: '👖' },
+  { name: '切尔西靴', color: '#1A1A1A', category: '鞋履', emoji: '👟' },
+  { name: '白色运动鞋', color: '#F5F5F5', category: '鞋履', emoji: '👟' },
+  { name: '米色大衣', color: '#D4C5B0', category: '外套', emoji: '🧥' },
+  { name: '黑色皮夹克', color: '#222222', category: '外套', emoji: '🧥' }
 ];
 
 var outfitsData = [
@@ -603,9 +645,6 @@ var citySearchInput = document.getElementById('citySearchInput');
 var cityLocateBtn = document.getElementById('cityLocateBtn');
 var pickupBtn = document.getElementById('pickupBtn');
 var pickupSelected = document.getElementById('pickupSelected');
-var pickupSwatch = document.getElementById('pickupSwatch');
-var pickupName = document.getElementById('pickupName');
-var pickupRemove = document.getElementById('pickupRemove');
 var drawerOverlay = document.getElementById('drawerOverlay');
 var drawerPanel = document.getElementById('drawerPanel');
 var drawerClose = document.getElementById('drawerClose');
@@ -736,42 +775,119 @@ function applyWeatherData(data, city) {
   selectedTemp = parseInt(minTemp) < 10 ? '＜10°' : parseInt(minTemp) < 20 ? '10-20°' : parseInt(minTemp) < 30 ? '20-30°' : '＞30°';
 }
 
-// ── 指定单品抽屉 ──
-function renderDrawer() {
-  drawerGrid.innerHTML = mockItems.map(function(item, i) {
-    return '<div class="drawer-item" data-index="' + i + '">'
-      + '<div class="swatch" style="background:' + item.color + '"></div>'
-      + '<span class="name">' + item.name + '</span></div>';
-  }).join('');
+// ── 指定单品抽屉（多选 + 分类筛选）──
+var drawerCats = document.getElementById('drawerCats');
+var drawerCount = document.getElementById('drawerCount');
+var currentCat = '全部';
+var drawerSelectedSet = []; // 多选：已选 index 数组
+
+function renderDrawer(cat) {
+  drawerGrid.innerHTML = '';
+  mockItems.forEach(function(item, i) {
+    if (cat !== '全部' && item.category !== cat) return;
+    var el = document.createElement('div');
+    el.className = 'drawer-item' + (drawerSelectedSet.indexOf(i) >= 0 ? ' selected' : '');
+    el.dataset.index = i;
+    el.innerHTML = '<div class="swatch" style="background:' + item.color + '"></div>'
+      + '<span class="name">' + item.name + '</span>'
+      + '<span class="cat-tag">' + item.category + '</span>'
+      + '<div class="drawer-check">✓</div>';
+    drawerGrid.appendChild(el);
+  });
 }
-renderDrawer();
-var drawerSelected = null;
+
+function updateDrawerCount() {
+  var n = drawerSelectedSet.length;
+  drawerCount.textContent = n > 0 ? '已选 ' + n + ' 件' : '尚未选择';
+  drawerConfirm.disabled = n === 0;
+}
+
+drawerCats.addEventListener('click', function(e) {
+  var btn = e.target.closest('.drawer-cat');
+  if (!btn) return;
+  drawerCats.querySelectorAll('.drawer-cat').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  currentCat = btn.dataset.cat;
+  renderDrawer(currentCat);
+});
+
 drawerGrid.addEventListener('click', function(e) {
   var el = e.target.closest('.drawer-item');
   if (!el) return;
-  drawerGrid.querySelectorAll('.drawer-item').forEach(function(d) { d.classList.remove('selected'); });
-  el.classList.add('selected');
-  drawerSelected = mockItems[parseInt(el.dataset.index)];
-  drawerConfirm.disabled = false;
+  var idx = parseInt(el.dataset.index);
+  var pos = drawerSelectedSet.indexOf(idx);
+  if (pos >= 0) {
+    drawerSelectedSet.splice(pos, 1);
+    el.classList.remove('selected');
+  } else {
+    drawerSelectedSet.push(idx);
+    el.classList.add('selected');
+  }
+  updateDrawerCount();
 });
+
 pickupBtn.addEventListener('click', function() {
-  drawerSelected = null; drawerConfirm.disabled = true;
-  drawerGrid.querySelectorAll('.drawer-item').forEach(function(d) { d.classList.remove('selected'); });
-  drawerOverlay.classList.add('open'); drawerPanel.classList.add('open');
+  currentCat = '全部';
+  drawerCats.querySelectorAll('.drawer-cat').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.cat === '全部');
+  });
+  renderDrawer('全部');
+  updateDrawerCount();
+  drawerOverlay.classList.add('open');
+  drawerPanel.classList.add('open');
 });
-function closeDrawer() { drawerOverlay.classList.remove('open'); drawerPanel.classList.remove('open'); }
+
+function closeDrawer() {
+  drawerOverlay.classList.remove('open');
+  drawerPanel.classList.remove('open');
+}
 drawerClose.addEventListener('click', closeDrawer);
 drawerOverlay.addEventListener('click', closeDrawer);
+
 drawerConfirm.addEventListener('click', function() {
-  if (!drawerSelected) return;
-  selectedItem = drawerSelected;
-  pickupSwatch.style.background = selectedItem.color;
-  pickupName.textContent = selectedItem.name;
+  if (drawerSelectedSet.length === 0) return;
+  selectedItem = drawerSelectedSet.map(function(i) { return mockItems[i]; });
+  // 渲染 chips
+  pickupSelected.innerHTML = '';
+  selectedItem.forEach(function(item, i) {
+    var chip = document.createElement('div');
+    chip.className = 'pickup-chip';
+    chip.innerHTML = '<span class="pickup-chip-dot" style="background:' + item.color + '"></span>'
+      + item.name
+      + '<span class="pickup-chip-remove" data-i="' + i + '">×</span>';
+    pickupSelected.appendChild(chip);
+  });
   pickupSelected.classList.add('show');
   closeDrawer();
 });
-pickupRemove.addEventListener('click', function() {
-  selectedItem = null; pickupSelected.classList.remove('show');
+
+// 单个 chip 删除
+pickupSelected.addEventListener('click', function(e) {
+  var btn = e.target.closest('.pickup-chip-remove');
+  if (!btn) return;
+  var i = parseInt(btn.dataset.i);
+  selectedItem.splice(i, 1);
+  if (selectedItem.length === 0) {
+    selectedItem = null;
+    pickupSelected.innerHTML = '';
+    pickupSelected.classList.remove('show');
+    drawerSelectedSet = [];
+    return;
+  }
+  // 重新渲染 chips
+  pickupSelected.innerHTML = '';
+  selectedItem.forEach(function(item, idx) {
+    var chip = document.createElement('div');
+    chip.className = 'pickup-chip';
+    chip.innerHTML = '<span class="pickup-chip-dot" style="background:' + item.color + '"></span>'
+      + item.name
+      + '<span class="pickup-chip-remove" data-i="' + idx + '">×</span>';
+    pickupSelected.appendChild(chip);
+  });
+  // 同步 drawerSelectedSet
+  drawerSelectedSet = selectedItem.map(function(si) {
+    return mockItems.indexOf(si);
+  });
 });
 
 // ── 渲染搭配卡片 ──
