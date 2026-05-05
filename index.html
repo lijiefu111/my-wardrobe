@@ -316,13 +316,18 @@
 <script>
 (function() {
   // === Mock Data ===
+  const IMG = 'https://raw.githubusercontent.com/lijiefu111/my-wardrobe/main/images/';
   const mockItems = [
-    { id: 1, name: '白色宽松衬衫', category: 'top', season: 'spring', color: '白色', bg: '#E8E8E8', emoji: '👔' },
-    { id: 2, name: '黑色直筒西裤', category: 'bottom', season: 'autumn', color: '黑色', bg: '#2C2C2C', emoji: '👖' },
-    { id: 3, name: '米色羊毛大衣', category: 'outerwear', season: 'winter', color: '米色', bg: '#D4C5B0', emoji: '🧥' },
-    { id: 4, name: '深蓝牛仔裤', category: 'bottom', season: 'autumn', color: '深蓝', bg: '#2B4B7A', emoji: '👖' },
-    { id: 5, name: '灰色圆领卫衣', category: 'top', season: 'spring', color: '灰色', bg: '#9E9E9E', emoji: '👕' },
-    { id: 6, name: '黑色切尔西靴', category: 'shoes', season: 'winter', color: '黑色', bg: '#1A1A1A', emoji: '👢' },
+    { id: 1, name: '条纹Polo衫', category: 'top', season: 'summer', color: '白黑条纹', bg: IMG+'item4_stripe_polo.jpg', emoji: '👕' },
+    { id: 2, name: '做旧印花黑T', category: 'top', season: 'summer', color: '黑色', bg: IMG+'item7_washed_tee_black.jpg', emoji: '👕' },
+    { id: 3, name: '图腾刺绣针织短袖', category: 'top', season: 'spring', color: '浅灰', bg: IMG+'item6_totem_knit.jpg', emoji: '👕' },
+    { id: 4, name: '做旧字母印花T恤', category: 'top', season: 'summer', color: '橄榄绿', bg: IMG+'item5_vintage_tee_olive.jpg', emoji: '👕' },
+    { id: 5, name: '人物印花短袖衬衫', category: 'top', season: 'summer', color: '米白', bg: IMG+'item9_graphic_shirt.jpg', emoji: '👔' },
+    { id: 6, name: '白色工装宽裤', category: 'bottom', season: 'summer', color: '白色', bg: IMG+'item1_cargo_pants_white.jpg', emoji: '👖' },
+    { id: 7, name: '贴布绣工装裤', category: 'bottom', season: 'spring', color: '卡其', bg: IMG+'item2_workpants_khaki.jpg', emoji: '👖' },
+    { id: 8, name: '深灰阔腿西装裤', category: 'bottom', season: 'autumn', color: '深灰', bg: IMG+'item3_wide_pants_grey.jpg', emoji: '👖' },
+    { id: 9, name: 'Jordan 联名板鞋', category: 'shoes', season: 'all', color: '黑色', bg: IMG+'item8_jordan_black.jpg', emoji: '👟' },
+    { id: 10, name: 'One Day Sober棒球帽', category: 'accessories', season: 'all', color: '深蓝', bg: IMG+'item10_cap_navy.jpg', emoji: '🧢' },
   ];
 
   // === Load items from localStorage + mock ===
@@ -429,7 +434,7 @@
       localStorage.removeItem('today_outfit');
       localStorage.removeItem('favorites');
       localStorage.removeItem('wishlist');
-      localStorage.setItem('wear_count', JSON.stringify({ 1: 12, 2: 8, 3: 5, 4: 7, 5: 3, 6: 6 }));
+      localStorage.setItem('wear_count', JSON.stringify({ 1: 15, 2: 11, 3: 6, 4: 9, 5: 4, 6: 18, 7: 7, 8: 3, 9: 22, 10: 8 }));
       render();
     }
   });
