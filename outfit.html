@@ -713,32 +713,33 @@ var mockItems = [
   { name: '黑色皮夹克', color: '#222222', category: '外套', emoji: '🧥' }
 ];
 
+var IMG = 'https://raw.githubusercontent.com/lijiefu111/my-wardrobe/main/images/';
 var outfitsData = [
   {
-    name: '方案一', styles: ['极简', '职场'],
-    reason: '阴天通勤的最优解：白色衬衫利落大方，黑色西裤经典百搭，切尔西靴收尾干净，整体清爽不失正式感。',
+    name: '方案一', styles: ['街头', '日常'],
+    reason: '条纹Polo打底随性有型，白色工装裤廓形炸裂，Jordan黑色联名鞋画龙点睛。整套松弛感拉满，出门直接有回头率。',
     items: [
-      { name: '白色宽松衬衫', type: '上装', color: '#E8E8E8', img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80', score: null },
-      { name: '黑色直筒西裤', type: '下装', color: '#2C2C2C', img: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&q=80', score: null },
-      { name: '黑色切尔西靴', type: '鞋履', color: '#1A1A1A', img: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&q=80', score: '85% · 极佳' }
+      { name: '条纹Polo衫', type: '上装', color: '#F5F5F5', img: IMG+'item4_stripe_polo.jpg', score: null },
+      { name: '白色工装宽裤', type: '下装', color: '#E8E8E8', img: IMG+'item1_cargo_pants_white.jpg', score: null },
+      { name: 'Jordan 联名板鞋', type: '鞋履', color: '#1A1A1A', img: IMG+'item8_jordan_black.jpg', score: '92% · 极佳' }
     ]
   },
   {
-    name: '方案二', styles: ['休闲', '街头'],
-    reason: '灰色卫衣带点随性，深蓝牛仔裤经典百搭，切尔西靴提升整体质感，休闲中不失品位，走在街头自然有型。',
+    name: '方案二', styles: ['Y2K', '复古街头'],
+    reason: 'Balenciaga做旧黑T压住气场，卡其贴布工装裤细节满满，帽子一扣整体起飞。这套出现在小红书绝对有人问链接。',
     items: [
-      { name: '灰色圆领卫衣', type: '上装', color: '#9E9E9E', img: 'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=400&q=80', score: null },
-      { name: '深蓝牛仔裤', type: '下装', color: '#2B4B7A', img: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&q=80', score: null },
-      { name: '黑色切尔西靴', type: '鞋履', color: '#1A1A1A', img: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400&q=80', score: '78% · 良好' }
+      { name: '做旧印花黑色T', type: '上装', color: '#2C2C2C', img: IMG+'item7_washed_tee_black.jpg', score: null },
+      { name: '贴布绣工装裤', type: '下装', color: '#C8B89A', img: IMG+'item2_workpants_khaki.jpg', score: null },
+      { name: 'One Day Sober棒球帽', type: '配饰', color: '#3B5B8C', img: IMG+'item10_cap_navy.jpg', score: '88% · 极佳' }
     ]
   },
   {
-    name: '方案三', styles: ['简约', '通勤'],
-    reason: '白色衬衫配深蓝牛仔裤，永远不会出错的组合。衬衫微扎进裤腰可提升正式感，轻松应对各种通勤场景。',
+    name: '方案三', styles: ['高级感', '艺术'],
+    reason: '图腾刺绣针织衫高级又有话题性，深灰阔腿西裤撑起整体廓形，Jordan再来一双收尾——既能逛展也能约饭，场合通吃。',
     items: [
-      { name: '白色宽松衬衫', type: '上装', color: '#E8E8E8', img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80', score: null },
-      { name: '深蓝牛仔裤', type: '下装', color: '#2B4B7A', img: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&q=80', score: null },
-      { name: '白色运动鞋', type: '鞋履', color: '#F5F5F5', img: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=400&q=80', score: '80% · 良好' }
+      { name: '图腾刺绣针织短袖', type: '上装', color: '#D8D4CC', img: IMG+'item6_totem_knit.jpg', score: null },
+      { name: '深灰阔腿西装裤', type: '下装', color: '#5A5A5A', img: IMG+'item3_wide_pants_grey.jpg', score: null },
+      { name: 'Jordan 联名板鞋', type: '鞋履', color: '#1A1A1A', img: IMG+'item8_jordan_black.jpg', score: '85% · 极佳' }
     ]
   }
 ];
