@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>购物 - WARDROBE</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  background: #E8E8E8;
+  color: #000;
+  font-weight: 300;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+.app {
+  max-width: 390px;
+  width: 100%;
+  background: #FFF;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* ===== 顶部导航 ===== */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 390px;
+  width: 100%;
+  background: #FFF;
+  text-align: center;
+  padding: 14px 0;
+  z-index: 100;
+  border-bottom: 1px solid #E0E0E0;
+}
+.top-nav h1 {
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+}
+
+/* ===== 顶部 Tab 切换 ===== */
+.tab-bar {
+  position: fixed;
+  top: 49px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 390px;
+  width: 100%;
+  background: #FFF;
+  display: flex;
+  z-index: 99;
+  border-bottom: 1px solid #E0E0E0;
+}
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0 10px;
+  font-size: 14px;
+  color: #999;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+.tab-item.active { color: #000; font-weight: 400; }
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 2px;
+  background: #000;
+}
+
+/* ===== 内容区 ===== */
+.content {
+  padding-top: 102px;
+  padding-bottom: 80px;
+  min-height: 100vh;
+}
+.tab-content { display: none; padding: 16px; }
+.tab-content.active { display: block; }
+
+/* ===== Tab A: 衣橱诊断 ===== */
+.intro-card {
+  background: #F5F5F5;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+.intro-card h2 {
+  font-size: 18px;
+  font-weight: 300;
+  margin-bottom: 8px;
+}
+.intro-card p {
+  font-size: 12px;
+  color: #999;
+  line-height: 1.6;
+}
+
+.btn-primary {
+  width: 100%;
+  height: 50px;
+  background: #000;
+  color: #FFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  margin-bottom: 16px;
+}
+.btn-primary:active { opacity: 0.8; }
+
+/* Loading */
+.loading-area {
+  display: none;
+  text-align: center;
+  padding: 40px 0;
+  color: #999;
+  font-size: 15px;
+}
+.loading-area.show { display: block; }
+.loading-area .spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #E0E0E0;
+  border-top-color: #999;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 结果区 */
+.result-area { display: none; }
+.result-area.show { display: block; }
+
+.summary-card {
+  border-left: 3px solid #000;
+  background: #F5F5F5;
+  padding: 16px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 24px;
+}
+.summary-card h3 {
+  font-size: 15px;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+.summary-card p {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.7;
+}
+
+.rec-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.rec-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px solid #E0E0E0;
+}
+.rec-item:last-child { border-bottom: none; }
+.rec-num {
+  font-size: 32px;
+  font-weight: 200;
+  color: #CCC;
+  min-width: 36px;
+  line-height: 1;
+  margin-right: 12px;
+}
+.rec-info { flex: 1; }
+.rec-name {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.rec-reason {
+  font-size: 12px;
+  color: #999;
+  line-height: 1.5;
+}
+.rec-price {
+  font-size: 13px;
+  color: #999;
+  white-space: nowrap;
+  margin-left: 12px;
+  align-self: center;
+}
+
+/* ===== Tab B: 单品测评 ===== */
+.upload-desc {
+  font-size: 12px;
+  color: #999;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.upload-area {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 240px;
+  border: 2px dashed #D0D0D0;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+  background: #FAFAFA;
+  transition: border-color 0.2s;
+}
+.upload-area:hover { border-color: #999; }
+.upload-area .placeholder {
+  font-size: 14px;
+  color: #BBB;
+  text-align: center;
+  line-height: 1.6;
+}
+.upload-area .placeholder .icon { font-size: 36px; margin-bottom: 8px; }
+.upload-area img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#fileInput { display: none; }
+
+/* 测评结果 */
+.meetup-score {
+  text-align: center;
+  padding: 20px 0 8px;
+}
+.score-big {
+  font-size: 72px;
+  font-weight: 300;
+  line-height: 1;
+  color: #000;
+}
+.score-total {
+  font-size: 14px;
+  color: #999;
+}
+.score-tag {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 12px;
+  background: #000;
+  color: #FFF;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.divider {
+  height: 1px;
+  background: #E0E0E0;
+  margin: 20px 0;
+}
+
+.outfit-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  margin-top: 16px;
+}
+
+.outfit-item {
+  padding: 16px 0;
+  border-bottom: 1px solid #E0E0E0;
+}
+.outfit-item:last-child { border-bottom: none; }
+.color-blocks {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.color-block {
+  width: 40px;
+  height: 56px;
+  border-radius: 6px;
+  border: 1px solid #E0E0E0;
+}
+.outfit-scene {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.outfit-desc {
+  font-size: 12px;
+  color: #999;
+  line-height: 1.5;
+}
+
+.buy-advice {
+  background: #F5F5F5;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+.buy-advice .label {
+  color: #34C759;
+  font-weight: 400;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.buy-advice .reason {
+  font-size: 12px;
+  color: #999;
+}
+
+.btn-wishlist {
+  width: 100%;
+  height: 50px;
+  background: #FFF;
+  color: #000;
+  border: 1.5px solid #000;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-wishlist:active { opacity: 0.7; }
+.btn-wishlist.saved {
+  color: #999;
+  border-color: #CCC;
+}
+
+/* ===== 底部 Tab 栏 ===== */
+.bottom-tab {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 390px;
+  width: 100%;
+  height: 60px;
+  background: #FFF;
+  border-top: 1px solid #E0E0E0;
+  display: flex;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.bottom-tab .tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #999;
+  font-size: 11px;
+  gap: 3px;
+  cursor: pointer;
+}
+.bottom-tab .tab.active { color: #000; }
+.bottom-tab .tab .icon { font-size: 22px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- 顶部导航 -->
+  <nav class="top-nav">
+    <h1>WARDROBE</h1>
+  </nav>
+
+  <!-- Tab 切换 -->
+  <div class="tab-bar">
+    <div class="tab-item active" data-tab="diagnosis">衣橱诊断</div>
+    <div class="tab-item" data-tab="review">单品测评</div>
+  </div>
+
+  <!-- 内容区 -->
+  <div class="content">
+
+    <!-- Tab A: 衣橱诊断 -->
+    <div class="tab-content active" id="tab-diagnosis">
+      <div class="intro-card">
+        <h2>你的衣橱缺什么？</h2>
+        <p>AI分析衣橱结构，找出搭配短板，推荐最值得添置的单品</p>
+      </div>
+      <button class="btn-primary" id="btnDiagnose">开始诊断</button>
+
+      <div class="loading-area" id="diagLoading">
+        <span class="spinner"></span>🤖 分析中...
+      </div>
+
+      <div class="result-area" id="diagResult">
+        <div class="summary-card">
+          <h3>📊 衣橱分析报告</h3>
+          <p>你的衣橱以休闲风为主，黑白灰占比约 70%，基础款充足。秋冬外层和多场景鞋履存在明显短板。</p>
+        </div>
+        <div class="rec-title">建议添置以下单品</div>
+        <div class="rec-item">
+          <span class="rec-num">01</span>
+          <div class="rec-info">
+            <div class="rec-name">驼色风衣</div>
+            <div class="rec-reason">秋冬外出首选，通勤/约会/旅行全覆盖</div>
+          </div>
+          <span class="rec-price">¥300-800</span>
+        </div>
+        <div class="rec-item">
+          <span class="rec-num">02</span>
+          <div class="rec-info">
+            <div class="rec-name">白色运动鞋</div>
+            <div class="rec-reason">鞋履仅有切尔西靴，休闲搭配受限</div>
+          </div>
+          <span class="rec-price">¥200-500</span>
+        </div>
+        <div class="rec-item">
+          <span class="rec-num">03</span>
+          <div class="rec-info">
+            <div class="rec-name">米色针织毛衣</div>
+            <div class="rec-reason">秋冬中间层缺失，叠穿外套或衬衫</div>
+          </div>
+          <span class="rec-price">¥150-400</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab B: 单品测评 -->
+    <div class="tab-content" id="tab-review">
+      <p class="upload-desc">上传你看中的单品，AI告诉你和衣橱的适配度，以及能搭配几套穿着</p>
+
+      <div class="upload-area" id="uploadArea">
+        <div class="placeholder" id="uploadPlaceholder">
+          <div class="icon">📷</div>
+          <div>上传单品图片</div>
+        </div>
+        <img id="previewImg" style="display:none" alt="预览">
+      </div>
+      <input type="file" accept="image/*" id="fileInput">
+
+      <button class="btn-primary" id="btnAnalyze">开始分析</button>
+
+      <div class="loading-area" id="reviewLoading">
+        <span class="spinner"></span>🤖 AI正在比对你的衣橱...
+      </div>
+
+      <div class="result-area" id="reviewResult">
+        <div class="meetup-score">
+          <span class="score-big">78</span><span class="score-total">/ 100</span>
+          <br>
+          <span class="score-tag">较高适配</span>
+        </div>
+        <div class="divider"></div>
+        <div class="outfit-title">可组成的穿搭</div>
+
+        <div class="outfit-item">
+          <div class="color-blocks">
+            <div class="color-block" style="background:#CCCCCC" title="上传品"></div>
+            <div class="color-block" style="background:#E8E8E8" title="白衬衫"></div>
+            <div class="color-block" style="background:#2C2C2C" title="黑西裤"></div>
+            <div class="color-block" style="background:#1A1A1A" title="靴"></div>
+          </div>
+          <div class="outfit-scene">职场通勤</div>
+          <div class="outfit-desc">搭配白衬衫+黑西裤，干净简约</div>
+        </div>
+
+        <div class="outfit-item">
+          <div class="color-blocks">
+            <div class="color-block" style="background:#CCCCCC" title="上传品"></div>
+            <div class="color-block" style="background:#9E9E9E" title="灰卫衣"></div>
+            <div class="color-block" style="background:#2B4B7A" title="深蓝裤"></div>
+          </div>
+          <div class="outfit-scene">日常休闲</div>
+          <div class="outfit-desc">搭配卫衣+牛仔裤，舒适随性</div>
+        </div>
+
+        <div class="buy-advice">
+          <div class="label">✓ 建议购入</div>
+          <div class="reason">适配度高，填补鞋类和外搭空白</div>
+        </div>
+
+        <button class="btn-wishlist" id="btnWishlist">收藏这件</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 底部 Tab 栏 -->
+  <div class="bottom-tab">
+    <a class="tab" href="index.html">
+      <span class="icon">👗</span>
+      <span>衣橱</span>
+    </a>
+    <a class="tab" href="outfit.html">
+      <span class="icon">✨</span>
+      <span>搭配</span>
+    </a>
+    <a class="tab active" href="shop.html">
+      <span class="icon">🛍</span>
+      <span>购物</span>
+    </a>
+  </div>
+</div>
+
+<script>
+(function() {
+  // ===== Tab 切换 =====
+  const tabItems = document.querySelectorAll('.tab-item');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  tabItems.forEach(function(item) {
+    item.addEventListener('click', function() {
+      const target = this.getAttribute('data-tab');
+      tabItems.forEach(function(t) { t.classList.remove('active'); });
+      tabContents.forEach(function(c) { c.classList.remove('active'); });
+      this.classList.add('active');
+      document.getElementById('tab-' + target).classList.add('active');
+    });
+  });
+
+  // ===== 衣橱诊断 =====
+  var btnDiagnose = document.getElementById('btnDiagnose');
+  var diagLoading = document.getElementById('diagLoading');
+  var diagResult = document.getElementById('diagResult');
+
+  btnDiagnose.addEventListener('click', function() {
+    btnDiagnose.style.display = 'none';
+    diagLoading.classList.add('show');
+    diagResult.classList.remove('show');
+
+    setTimeout(function() {
+      diagLoading.classList.remove('show');
+      diagResult.classList.add('show');
+    }, 1500);
+  });
+
+  // ===== 单品测评 - 图片上传 =====
+  var uploadArea = document.getElementById('uploadArea');
+  var fileInput = document.getElementById('fileInput');
+  var previewImg = document.getElementById('previewImg');
+  var uploadPlaceholder = document.getElementById('uploadPlaceholder');
+
+  uploadArea.addEventListener('click', function() {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      previewImg.src = ev.target.result;
+      previewImg.style.display = 'block';
+      uploadPlaceholder.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ===== 单品测评 - 开始分析 =====
+  var btnAnalyze = document.getElementById('btnAnalyze');
+  var reviewLoading = document.getElementById('reviewLoading');
+  var reviewResult = document.getElementById('reviewResult');
+
+  btnAnalyze.addEventListener('click', function() {
+    btnAnalyze.style.display = 'none';
+    reviewLoading.classList.add('show');
+    reviewResult.classList.remove('show');
+
+    setTimeout(function() {
+      reviewLoading.classList.remove('show');
+      reviewResult.classList.add('show');
+    }, 2000);
+  });
+
+  // ===== 收藏按钮 =====
+  var btnWishlist = document.getElementById('btnWishlist');
+
+  // 初始化收藏状态
+  function updateWishlistUI() {
+    var wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+    var isSaved = wishlist.some(function(item) { return item.name === '驼色风衣'; });
+    if (isSaved) {
+      btnWishlist.textContent = '已收藏 ♡';
+      btnWishlist.classList.add('saved');
+    } else {
+      btnWishlist.textContent = '收藏这件';
+      btnWishlist.classList.remove('saved');
+    }
+  }
+  updateWishlistUI();
+
+  btnWishlist.addEventListener('click', function() {
+    var wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+    var isSaved = wishlist.some(function(item) { return item.name === '驼色风衣'; });
+
+    if (!isSaved) {
+      wishlist.push({ name: '驼色风衣', price: '¥300-800', time: Date.now() });
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+      btnWishlist.textContent = '已收藏 ♡';
+      btnWishlist.classList.add('saved');
+    } else {
+      wishlist = wishlist.filter(function(item) { return item.name !== '驼色风衣'; });
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+      btnWishlist.textContent = '收藏这件';
+      btnWishlist.classList.remove('saved');
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
