@@ -258,10 +258,6 @@
       <span class="filter-tag" data-tag="聚会">聚会</span>
       <span class="filter-tag" data-tag="运动">运动</span>
       <span class="filter-tag" data-tag="旅行">旅行</span>
-      <span class="filter-tag" data-tag="春">春</span>
-      <span class="filter-tag" data-tag="夏">夏</span>
-      <span class="filter-tag" data-tag="秋">秋</span>
-      <span class="filter-tag" data-tag="冬">冬</span>
     </div>
   </div>
 
@@ -280,46 +276,34 @@
 </div>
 
 <script>
-// ===== Mock 数据 =====
+var _FIMG = 'https://raw.githubusercontent.com/lijiefu111/my-wardrobe/main/images/';
+// ===== Mock 数据（演示用，展示「一键生成」的效果） =====
 const MOCK_FAVORITES = [
   {
-    id: 1,
-    outfitName: '职场通勤',
+    id: 101,
+    outfitName: '街头日常',
     items: [
-      { name: '白色衬衫', color: '#E8E8E8' },
-      { name: '黑色西裤', color: '#2C2C2C' },
-      { name: '切尔西靴', color: '#1A1A1A' }
-    ],
-    occasion: '职场',
-    weather: '晴天',
-    tags: ['职场', '秋', '简约'],
-    savedAt: '2026-05-04T09:00:00Z'
-  },
-  {
-    id: 2,
-    outfitName: '日常休闲',
-    items: [
-      { name: '灰色卫衣', color: '#9E9E9E' },
-      { name: '深蓝牛仔裤', color: '#2B4B7A' },
-      { name: '切尔西靴', color: '#1A1A1A' }
+      { name: '条纹Polo衫', color: '#F5F5F5', img: _FIMG+'item4_stripe_polo.jpg' },
+      { name: '白色工装宽裤', color: '#E8E8E8', img: _FIMG+'item1_cargo_pants_white.jpg' },
+      { name: 'Jordan 联名板鞋', color: '#1A1A1A', img: _FIMG+'item8_jordan_black.jpg' }
     ],
     occasion: '日常',
-    weather: '阴天',
-    tags: ['日常', '春', '休闲'],
-    savedAt: '2026-05-03T14:00:00Z'
+    weather: '晴天',
+    tags: ['街头', '日常'],
+    savedAt: '2026-05-05T20:00:00Z'
   },
   {
-    id: 3,
-    outfitName: '周末约会',
+    id: 102,
+    outfitName: 'Y2K复古街头',
     items: [
-      { name: '米色大衣', color: '#D4C5B0' },
-      { name: '深蓝牛仔裤', color: '#2B4B7A' },
-      { name: '白色衬衫', color: '#E8E8E8' }
+      { name: '做旧印花黑T', color: '#2C2C2C', img: _FIMG+'item7_washed_tee_black.jpg' },
+      { name: '贴布绣工装裤', color: '#C8B89A', img: _FIMG+'item2_workpants_khaki.jpg' },
+      { name: 'One Day Sober棒球帽', color: '#3B5B8C', img: _FIMG+'item10_cap_navy.jpg' }
     ],
-    occasion: '约会',
+    occasion: '聚会',
     weather: '晴天',
-    tags: ['约会', '冬', '优雅'],
-    savedAt: '2026-05-02T18:00:00Z'
+    tags: ['Y2K', '聚会'],
+    savedAt: '2026-05-05T19:00:00Z'
   }
 ];
 
@@ -332,13 +316,9 @@ function loadFavorites() {
   if (stored) {
     try { storedList = JSON.parse(stored); } catch (e) { storedList = []; }
   }
-  // localStorage 数据在前，mock 在后（去重：同 id 跳过 mock）
-  const storedIds = new Set(storedList.map(f => f.id));
-  const merged = [...storedList];
-  for (const m of MOCK_FAVORITES) {
-    if (!storedIds.has(m.id)) merged.push(m);
-  }
-  return merged;
+  // localStorage 有数据时只用真实数据；没有时才用 Mock 演示
+  if (storedList.length > 0) return storedList;
+  return MOCK_FAVORITES;
 }
 
 function formatDateTime(iso) {
