@@ -700,17 +700,18 @@ body {
 
 <script>
 // ── Mock 数据 ──
+var _IMG = 'https://raw.githubusercontent.com/lijiefu111/my-wardrobe/main/images/';
 var mockItems = [
-  { name: '白色衬衫', color: '#E8E8E8', category: '上装', emoji: '👕' },
-  { name: '灰色卫衣', color: '#9E9E9E', category: '上装', emoji: '👕' },
-  { name: '条纹T恤', color: '#D0D8E0', category: '上装', emoji: '👕' },
-  { name: '黑色西裤', color: '#2C2C2C', category: '下装', emoji: '👖' },
-  { name: '深蓝牛仔裤', color: '#2B4B7A', category: '下装', emoji: '👖' },
-  { name: '米白阔腿裤', color: '#E8E0D0', category: '下装', emoji: '👖' },
-  { name: '切尔西靴', color: '#1A1A1A', category: '鞋履', emoji: '👟' },
-  { name: '白色运动鞋', color: '#F5F5F5', category: '鞋履', emoji: '👟' },
-  { name: '米色大衣', color: '#D4C5B0', category: '外套', emoji: '🧥' },
-  { name: '黑色皮夹克', color: '#222222', category: '外套', emoji: '🧥' }
+  { name: '条纹Polo衫',       color: '#F5F5F5', category: '上装', img: _IMG+'item4_stripe_polo.jpg' },
+  { name: '做旧印花黑T',      color: '#2C2C2C', category: '上装', img: _IMG+'item7_washed_tee_black.jpg' },
+  { name: '图腾刺绣针织短袖', color: '#D8D4CC', category: '上装', img: _IMG+'item6_totem_knit.jpg' },
+  { name: '做旧字母印花T恤',  color: '#7A8A6A', category: '上装', img: _IMG+'item5_vintage_tee_olive.jpg' },
+  { name: '人物印花短袖衬衫', color: '#F0EDE0', category: '上装', img: _IMG+'item9_graphic_shirt.jpg' },
+  { name: '白色工装宽裤',     color: '#E8E8E8', category: '下装', img: _IMG+'item1_cargo_pants_white.jpg' },
+  { name: '贴布绣工装裤',     color: '#C8B89A', category: '下装', img: _IMG+'item2_workpants_khaki.jpg' },
+  { name: '深灰阔腿西装裤',  color: '#5A5A5A', category: '下装', img: _IMG+'item3_wide_pants_grey.jpg' },
+  { name: 'Jordan 联名板鞋', color: '#1A1A1A', category: '鞋履', img: _IMG+'item8_jordan_black.jpg' },
+  { name: 'One Day Sober棒球帽', color: '#3B5B8C', category: '配饰', img: _IMG+'item10_cap_navy.jpg' }
 ];
 
 var IMG = 'https://raw.githubusercontent.com/lijiefu111/my-wardrobe/main/images/';
@@ -911,7 +912,10 @@ function renderDrawer(cat) {
     var el = document.createElement('div');
     el.className = 'drawer-item' + (drawerSelectedSet.indexOf(i) >= 0 ? ' selected' : '');
     el.dataset.index = i;
-    el.innerHTML = '<div class="swatch" style="background:' + item.color + '"></div>'
+    var swatchStyle = item.img
+      ? 'background:url(' + item.img + ') center/cover no-repeat;'
+      : 'background:' + item.color + ';';
+    el.innerHTML = '<div class="swatch" style="' + swatchStyle + '"></div>'
       + '<span class="name">' + item.name + '</span>'
       + '<span class="cat-tag">' + item.category + '</span>'
       + '<div class="drawer-check">✓</div>';
@@ -1160,7 +1164,7 @@ favBtn.addEventListener('click', function() {
     currentFavId = Date.now();
     var item = {
       id: currentFavId, outfitName: outfit.name,
-      items: outfit.items.map(function(i) { return { name: i.name, color: i.color }; }),
+      items: outfit.items.map(function(i) { return { name: i.name, color: i.color, img: i.img || null }; }),
       occasion: customOccasion || selectedOccasion, weather: selectedWeather,
       tags: outfit.styles, savedAt: new Date().toISOString()
     };
