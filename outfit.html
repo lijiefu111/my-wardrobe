@@ -97,58 +97,92 @@ body {
 }
 .custom-input::placeholder { color: #BBB; }
 
-/* === 天气区 === */
-.weather-section { padding: 0 16px 16px; }
-.weather-header {
+/* === 天气卡片 === */
+.weather-card-section { padding: 0 16px 16px; }
+.weather-card {
+  background: linear-gradient(135deg, #FFF0EC 0%, #FFF5F0 50%, #FFF8F5 100%);
+  border-radius: 16px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
-}
-.location-btn {
-  font-size: 10px;
-  color: #666;
-  border: 1px solid #D0D0D0;
-  border-radius: 4px;
-  padding: 3px 8px;
   cursor: pointer;
-  background: #fff;
-  transition: all 0.2s;
-  white-space: nowrap;
+  transition: opacity 0.2s;
 }
-.location-btn:disabled {
-  color: #CCC;
-  border-color: #E0E0E0;
-  cursor: default;
-}
-.location-updated {
-  font-size: 10px;
-  color: #4CAF50;
-  margin-left: 6px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.location-updated.show { opacity: 1; }
-.weather-row, .temp-row {
+.weather-card:active { opacity: 0.85; }
+.weather-card-left { flex: 1; }
+.weather-city-row {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 4px;
   margin-bottom: 8px;
+  font-size: 13px;
+  color: #888;
 }
-.w-tag {
-  padding: 6px 12px;
-  font-size: 12px;
-  border: 1px solid #E0E0E0;
-  border-radius: 6px;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.2s;
-  user-select: none;
+.weather-city-icon { font-size: 13px; }
+.weather-city-name { color: #555; font-weight: 400; }
+.weather-city-dot { color: #CCC; }
+.weather-city-today { color: #888; }
+.weather-city-arrow { font-size: 11px; color: #AAA; margin-left: 2px; }
+.weather-temp {
+  font-size: 28px;
+  font-weight: 300;
+  color: #1A1A1A;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  letter-spacing: -0.5px;
 }
-.w-tag.active {
-  background: #000;
-  color: #fff;
-  border-color: #000;
+.weather-desc { font-size: 12px; color: #999; }
+.weather-card-right { flex-shrink: 0; }
+.weather-icon { font-size: 40px; line-height: 1; }
+
+/* 城市选择弹窗 */
+.city-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); z-index: 300;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s;
 }
+.city-overlay.open { opacity: 1; pointer-events: auto; }
+.city-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -45%);
+  width: calc(100% - 48px);
+  max-width: 342px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px 20px 20px;
+  z-index: 301;
+  opacity: 0; pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.city-modal.open {
+  opacity: 1; pointer-events: auto;
+  transform: translate(-50%, -50%);
+}
+.city-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.city-modal-title { font-size: 18px; font-weight: 600; color: #1A1A1A; }
+.city-modal-close { font-size: 20px; color: #999; cursor: pointer; padding: 4px; }
+.city-search-input {
+  width: 100%; height: 48px; padding: 0 16px;
+  border: 1.5px solid #E8805A; border-radius: 12px;
+  font-size: 15px; font-weight: 300; color: #1A1A1A;
+  outline: none; background: #fff; margin-bottom: 12px;
+  font-family: inherit;
+}
+.city-search-input::placeholder { color: #BBB; }
+.city-locate-btn {
+  width: 100%; height: 48px;
+  background: #fff; border: 1.5px solid #E8805A; border-radius: 12px;
+  color: #E8805A; font-size: 15px; font-weight: 400; font-family: inherit;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 8px; transition: background 0.15s;
+}
+.city-locate-btn:active { background: #FFF5F2; }
+.city-locate-btn.loading { color: #CCC; border-color: #E0E0E0; pointer-events: none; }
 
 /* === 指定单品 === */
 .pickup-section { padding: 0 16px 16px; }
@@ -480,26 +514,35 @@ body {
       <input class="custom-input" id="customOccasion" type="text" placeholder="或输入自定义场景，如：参加朋友婚礼、海边旅行…">
     </div>
 
-    <!-- 2. 天气区 -->
-    <div class="weather-section">
-      <div class="weather-header">
-        <span class="section-title" style="margin-bottom:0">今天天气</span>
-        <div style="display:flex;align-items:center;">
-          <button class="location-btn" id="locationBtn">📍 自动定位</button>
-          <span class="location-updated" id="locationUpdated">已更新</span>
+    <!-- 2. 天气卡片 -->
+    <div class="weather-card-section">
+      <div class="weather-card" id="weatherCard">
+        <div class="weather-card-left">
+          <div class="weather-city-row">
+            <span class="weather-city-icon">⊙</span>
+            <span class="weather-city-name" id="weatherCityName">上海</span>
+            <span class="weather-city-dot">·</span>
+            <span class="weather-city-today">今日</span>
+            <span class="weather-city-arrow">∨</span>
+          </div>
+          <div class="weather-temp" id="weatherTemp">16° / 25°</div>
+          <div class="weather-desc" id="weatherDesc">多云 · UV 中</div>
+        </div>
+        <div class="weather-card-right">
+          <div class="weather-icon" id="weatherIcon">⛅</div>
         </div>
       </div>
-      <div class="weather-row" id="weatherTags">
-        <span class="w-tag active" data-val="☀️ 晴天">☀️ 晴天</span>
-        <span class="w-tag" data-val="☁️ 阴天">☁️ 阴天</span>
-        <span class="w-tag" data-val="🌧 雨天">🌧 雨天</span>
+    </div>
+
+    <!-- 城市选择弹窗 -->
+    <div class="city-overlay" id="cityOverlay"></div>
+    <div class="city-modal" id="cityModal">
+      <div class="city-modal-header">
+        <span class="city-modal-title">选择城市</span>
+        <span class="city-modal-close" id="cityClose">✕</span>
       </div>
-      <div class="temp-row" id="tempTags">
-        <span class="w-tag" data-val="＜10°">＜10°</span>
-        <span class="w-tag" data-val="10-20°">10-20°</span>
-        <span class="w-tag active" data-val="20-30°">20-30°</span>
-        <span class="w-tag" data-val="＞30°">＞30°</span>
-      </div>
+      <input class="city-search-input" id="citySearchInput" type="text" placeholder="搜索城市，如 北京 / Tokyo" autocomplete="off">
+      <button class="city-locate-btn" id="cityLocateBtn">⊙ 使用当前定位</button>
     </div>
 
     <!-- 3. 指定单品 -->
@@ -615,8 +658,9 @@ const plans = [
 // ============ 状态 ============
 let selectedOccasion = '职场';
 let customOccasion = '';
-let selectedWeather = '☀️ 晴天';
-let selectedTemp = '20-30°';
+let selectedWeather = '多云';
+let selectedTemp = '16-25°';
+let weatherCity = '上海';
 let selectedItem = null;
 let selectedPlan = null;
 let isFavorited = false;
@@ -624,10 +668,6 @@ let isFavorited = false;
 // ============ DOM ============
 const occasionTagsEl = document.getElementById('occasionTags');
 const customInput = document.getElementById('customOccasion');
-const weatherTagsEl = document.getElementById('weatherTags');
-const tempTagsEl = document.getElementById('tempTags');
-const locationBtn = document.getElementById('locationBtn');
-const locationUpdated = document.getElementById('locationUpdated');
 const pickupBtn = document.getElementById('pickupBtn');
 const pickupSelectedEl = document.getElementById('pickupSelected');
 const pickupSwatchEl = document.getElementById('pickupSwatch');
@@ -670,85 +710,129 @@ customInput.addEventListener('input', (e) => {
   }
 });
 
-// ============ 天气标签 ============
-function setupTags(container, setter) {
-  container.addEventListener('click', (e) => {
-    const tag = e.target.closest('.w-tag');
-    if (!tag) return;
-    container.querySelectorAll('.w-tag').forEach(t => t.classList.remove('active'));
-    tag.classList.add('active');
-    setter(tag.dataset.val);
-  });
+// ============ 天气卡片 & 城市弹窗 ============
+const weatherCard = document.getElementById('weatherCard');
+const cityOverlay = document.getElementById('cityOverlay');
+const cityModal = document.getElementById('cityModal');
+const cityClose = document.getElementById('cityClose');
+const citySearchInput = document.getElementById('citySearchInput');
+const cityLocateBtn = document.getElementById('cityLocateBtn');
+const weatherCityName = document.getElementById('weatherCityName');
+const weatherTemp = document.getElementById('weatherTemp');
+const weatherDesc = document.getElementById('weatherDesc');
+const weatherIcon = document.getElementById('weatherIcon');
+
+// 打开城市选择弹窗
+weatherCard.addEventListener('click', () => {
+  citySearchInput.value = '';
+  cityOverlay.classList.add('open');
+  cityModal.classList.add('open');
+  setTimeout(() => citySearchInput.focus(), 300);
+});
+
+function closeCityModal() {
+  cityOverlay.classList.remove('open');
+  cityModal.classList.remove('open');
 }
-setupTags(weatherTagsEl, (v) => { selectedWeather = v; });
-setupTags(tempTagsEl, (v) => { selectedTemp = v; });
+cityClose.addEventListener('click', closeCityModal);
+cityOverlay.addEventListener('click', closeCityModal);
 
-// ============ 天气自动定位 ============
-locationBtn.addEventListener('click', () => {
-  if (locationBtn.disabled) return;
-  locationBtn.textContent = '定位中...';
-  locationBtn.disabled = true;
-  locationUpdated.classList.remove('show');
+// 搜索城市（按回车/失焦）
+citySearchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const city = citySearchInput.value.trim();
+    if (city) { fetchWeatherByCity(city); closeCityModal(); }
+  }
+});
 
+// 使用当前定位
+cityLocateBtn.addEventListener('click', () => {
   if (!navigator.geolocation) {
-    restoreLocationBtn();
-    showToast('浏览器不支持定位，请手动选择');
+    showToast('浏览器不支持定位');
     return;
   }
-
+  cityLocateBtn.textContent = '定位中...';
+  cityLocateBtn.classList.add('loading');
   navigator.geolocation.getCurrentPosition(
     (pos) => {
-      const lat = pos.coords.latitude;
-      const lon = pos.coords.longitude;
-      fetch(`https://wttr.in/${lat},${lon}?format=j1`)
-        .then(r => r.json())
-        .then(data => {
-          const temp = parseInt(data.current_condition[0].temp_C);
-          const desc = data.current_condition[0].weatherDesc[0].value;
-
-          // 判断天气
-          weatherTagsEl.querySelectorAll('.w-tag').forEach(t => t.classList.remove('active'));
-          if (/rain|Rain|drizzle/i.test(desc)) {
-            weatherTagsEl.querySelector('[data-val="🌧 雨天"]').classList.add('active');
-            selectedWeather = '🌧 雨天';
-          } else if (/cloud|Cloud|overcast/i.test(desc)) {
-            weatherTagsEl.querySelector('[data-val="☁️ 阴天"]').classList.add('active');
-            selectedWeather = '☁️ 阴天';
-          } else {
-            weatherTagsEl.querySelector('[data-val="☀️ 晴天"]').classList.add('active');
-            selectedWeather = '☀️ 晴天';
-          }
-
-          // 判断温度
-          tempTagsEl.querySelectorAll('.w-tag').forEach(t => t.classList.remove('active'));
-          let tempVal;
-          if (temp < 10) tempVal = '＜10°';
-          else if (temp < 20) tempVal = '10-20°';
-          else if (temp < 30) tempVal = '20-30°';
-          else tempVal = '＞30°';
-          tempTagsEl.querySelector(`[data-val="${tempVal}"]`).classList.add('active');
-          selectedTemp = tempVal;
-
-          locationBtn.textContent = '📍 自动定位';
-          locationBtn.disabled = false;
-          locationUpdated.classList.add('show');
-        })
-        .catch(() => {
-          restoreLocationBtn();
-          showToast('天气数据获取失败，请手动选择');
-        });
+      const lat = pos.coords.latitude.toFixed(4);
+      const lon = pos.coords.longitude.toFixed(4);
+      closeCityModal();
+      fetchWeatherByCoords(lat, lon);
     },
     () => {
-      restoreLocationBtn();
-      showToast('无法获取定位，请手动选择');
+      cityLocateBtn.textContent = '⊙ 使用当前定位';
+      cityLocateBtn.classList.remove('loading');
+      showToast('无法获取定位，请手动搜索城市');
     },
     { timeout: 8000 }
   );
 });
 
-function restoreLocationBtn() {
-  locationBtn.textContent = '📍 自动定位';
-  locationBtn.disabled = false;
+function fetchWeatherByCity(city) {
+  fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`)
+    .then(r => r.json())
+    .then(data => applyWeatherData(data, city))
+    .catch(() => showToast('城市天气获取失败，请重试'));
+}
+
+function fetchWeatherByCoords(lat, lon) {
+  fetch(`https://wttr.in/${lat},${lon}?format=j1`)
+    .then(r => r.json())
+    .then(data => {
+      const area = data.nearest_area?.[0];
+      const city = area?.areaName?.[0]?.value || '当前位置';
+      applyWeatherData(data, city);
+      cityLocateBtn.textContent = '⊙ 使用当前定位';
+      cityLocateBtn.classList.remove('loading');
+    })
+    .catch(() => {
+      showToast('天气获取失败，请重试');
+      cityLocateBtn.textContent = '⊙ 使用当前定位';
+      cityLocateBtn.classList.remove('loading');
+    });
+}
+
+function applyWeatherData(data, city) {
+  const c = data.current_condition[0];
+  const minTemp = data.weather?.[0]?.mintempC || c.temp_C;
+  const maxTemp = data.weather?.[0]?.maxtempC || c.temp_C;
+  const desc = c.weatherDesc[0].value;
+
+  weatherCity = city;
+  weatherCityName.textContent = city;
+  weatherTemp.textContent = `${minTemp}° / ${maxTemp}°`;
+
+  // UV 判断
+  const uv = parseInt(c.uvIndex || 0);
+  const uvText = uv >= 8 ? 'UV 极强' : uv >= 6 ? 'UV 强' : uv >= 3 ? 'UV 中' : 'UV 低';
+
+  // 天气中文描述
+  let zhDesc, icon;
+  if (/rain|drizzle/i.test(desc)) {
+    zhDesc = '有雨'; icon = '🌧'; selectedWeather = '雨天';
+  } else if (/snow/i.test(desc)) {
+    zhDesc = '有雪'; icon = '❄️'; selectedWeather = '阴天';
+  } else if (/thunder/i.test(desc)) {
+    zhDesc = '雷雨'; icon = '⛈'; selectedWeather = '雨天';
+  } else if (/overcast/i.test(desc)) {
+    zhDesc = '阴天'; icon = '☁️'; selectedWeather = '阴天';
+  } else if (/cloud/i.test(desc)) {
+    zhDesc = '多云'; icon = '⛅'; selectedWeather = '多云';
+  } else if (/fog|mist/i.test(desc)) {
+    zhDesc = '有雾'; icon = '🌫'; selectedWeather = '阴天';
+  } else {
+    zhDesc = '晴天'; icon = '☀️'; selectedWeather = '晴天';
+  }
+
+  weatherDesc.textContent = `${zhDesc} · ${uvText}`;
+  weatherIcon.textContent = icon;
+
+  const avg = (parseInt(minTemp) + parseInt(maxTemp)) / 2;
+  if (avg < 10) selectedTemp = '＜10°';
+  else if (avg < 20) selectedTemp = '10-20°';
+  else if (avg < 30) selectedTemp = '20-30°';
+  else selectedTemp = '＞30°';
 }
 
 // ============ 抽屉渲染 ============
@@ -823,7 +907,7 @@ aiBtn.addEventListener('click', () => {
 
 function renderResults() {
   const occasion = customOccasion || selectedOccasion;
-  resultSummary.textContent = `${occasion} · ${selectedWeather} ${selectedTemp} 推荐`;
+  resultSummary.textContent = `${occasion} · ${weatherCity} ${weatherDesc.textContent} 推荐`;
 
   planCards.innerHTML = plans.map((p, i) => `
     <div class="plan-card" data-plan="${i}">
