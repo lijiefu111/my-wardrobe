@@ -1002,8 +1002,17 @@ tabSelf.addEventListener('click', function() {
 tryonRegen.addEventListener('click', function() { showToast('重新生成中（演示版）'); });
 tryonFavBtn.addEventListener('click', function() { showToast('已收藏试穿效果'); tryonFavBtn.textContent = '❤️ 已收藏'; });
 tryonWear.addEventListener('click', function() {
-  closeTryon(); wearBtn.textContent = '✓ 已选择'; wearBtn.classList.add('worn');
-  showToast('今日穿搭已记录 ✓');
+  closeTryon();
+  var outfit = outfitsData[currentOutfitIndex];
+  localStorage.setItem('today_outfit', JSON.stringify(outfit));
+  var wearCount = {};
+  try { wearCount = JSON.parse(localStorage.getItem('wear_count') || '{}'); } catch(e) {}
+  outfit.items.forEach(function(item) {
+    wearCount[item.name] = (wearCount[item.name] || 0) + 1;
+  });
+  localStorage.setItem('wear_count', JSON.stringify(wearCount));
+  wearBtn.textContent = '✓ 已选择'; wearBtn.classList.add('worn');
+  showToast('今日穿搭已记录，衣橱次数 +1 ✓');
 });
 
 // ── 收藏 ──
@@ -1025,9 +1034,17 @@ favBtn.addEventListener('click', function() {
 
 // ── 就穿它 ──
 wearBtn.addEventListener('click', function() {
-  localStorage.setItem('today_outfit', JSON.stringify(outfitsData[currentOutfitIndex]));
+  var outfit = outfitsData[currentOutfitIndex];
+  localStorage.setItem('today_outfit', JSON.stringify(outfit));
+  // 记录每件单品穿着次数 → wear_count
+  var wearCount = {};
+  try { wearCount = JSON.parse(localStorage.getItem('wear_count') || '{}'); } catch(e) {}
+  outfit.items.forEach(function(item) {
+    wearCount[item.name] = (wearCount[item.name] || 0) + 1;
+  });
+  localStorage.setItem('wear_count', JSON.stringify(wearCount));
   wearBtn.textContent = '✓ 已选择'; wearBtn.classList.add('worn');
-  showToast('今日穿搭已记录 ✓');
+  showToast('今日穿搭已记录，衣橱次数 +1 ✓');
 });
 </script>
 </body>
