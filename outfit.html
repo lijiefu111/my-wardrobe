@@ -5,464 +5,428 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>今日搭配 - WARDROBE</title>
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  background: #F0F0F0;
+  font-family: -apple-system, 'Helvetica Neue', 'PingFang SC', sans-serif;
+  background: #E8E8E8;
   display: flex;
   justify-content: center;
   min-height: 100vh;
 }
-
-.phone-frame {
-  width: 100%;
+.app {
   max-width: 390px;
-  background: #FFFFFF;
-  position: relative;
+  width: 100%;
+  background: #fff;
   min-height: 100vh;
+  position: relative;
+  padding-bottom: 80px;
 }
 
-/* ===== Top Nav ===== */
-.top-nav {
+/* 顶部导航 */
+.header {
   position: fixed;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
   max-width: 390px;
-  height: 56px;
-  background: #FFFFFF;
+  height: 48px;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
   border-bottom: 1px solid #F0F0F0;
 }
-
-.top-nav h1 {
+.header h1 {
   font-size: 16px;
   font-weight: 300;
   letter-spacing: 0.3em;
-  color: #000000;
+  color: #000;
 }
 
-/* ===== Content Area ===== */
+/* 内容区 */
 .content {
-  padding-top: 56px;
-  padding-bottom: 60px;
+  padding-top: 58px;
 }
 
-/* ===== Condition Section ===== */
-.condition-section {
-  padding: 16px;
-}
-
-.section-label {
+/* 小标题 */
+.section-title {
   font-size: 12px;
   color: #999;
-  margin-bottom: 8px;
-  margin-top: 16px;
-  font-weight: 300;
+  margin-bottom: 10px;
 }
 
-.section-label:first-child {
-  margin-top: 0;
-}
-
-/* Tag scroll row */
-.tag-row {
+/* === 场合选择 === */
+.occasion-section { padding: 16px; }
+.tags-scroll {
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding-bottom: 4px;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
-
-.tag-row::-webkit-scrollbar {
-  display: none;
-}
-
+.tags-scroll::-webkit-scrollbar { display: none; }
 .tag {
   flex-shrink: 0;
-  padding: 8px 20px;
+  padding: 6px 14px;
   font-size: 13px;
-  font-weight: 300;
   border: 1px solid #E0E0E0;
-  border-radius: 4px;
-  background: #FFFFFF;
+  border-radius: 20px;
   color: #333;
   cursor: pointer;
   transition: all 0.2s;
   user-select: none;
 }
-
 .tag.active {
-  background: #000000;
-  color: #FFFFFF;
-  border-color: #000000;
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+.custom-input {
+  width: 100%;
+  margin-top: 10px;
+  border: none;
+  border-bottom: 1px solid #E0E0E0;
+  padding: 8px 0;
+  font-size: 14px;
+  font-weight: 300;
+  color: #000;
+  outline: none;
+  background: transparent;
+}
+.custom-input::placeholder { color: #BBB; }
+
+/* === 天气区 === */
+.weather-section { padding: 0 16px 16px; }
+.weather-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.location-btn {
+  font-size: 10px;
+  color: #666;
+  border: 1px solid #D0D0D0;
+  border-radius: 4px;
+  padding: 3px 8px;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.location-btn:disabled {
+  color: #CCC;
+  border-color: #E0E0E0;
+  cursor: default;
+}
+.location-updated {
+  font-size: 10px;
+  color: #4CAF50;
+  margin-left: 6px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.location-updated.show { opacity: 1; }
+.weather-row, .temp-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.w-tag {
+  padding: 6px 12px;
+  font-size: 12px;
+  border: 1px solid #E0E0E0;
+  border-radius: 6px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.w-tag.active {
+  background: #000;
+  color: #fff;
+  border-color: #000;
 }
 
-/* Pick item button */
-.pick-btn {
+/* === 指定单品 === */
+.pickup-section { padding: 0 16px 16px; }
+.pickup-btn {
   width: 100%;
-  padding: 12px;
+  height: 44px;
   background: #F5F5F5;
   border: 1px dashed #CCC;
-  border-radius: 4px;
-  font-size: 13px;
+  border-radius: 8px;
+  font-size: 14px;
   color: #666;
-  font-weight: 300;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.2s;
-}
-
-.pick-btn:active {
-  background: #EEE;
-}
-
-.pick-btn.selected {
-  border-style: solid;
-  border-color: #000;
-  background: #FFF;
-  color: #000;
-}
-
-/* Divider */
-.divider {
-  height: 1px;
-  background: #F0F0F0;
-  margin: 16px 0;
-}
-
-/* AI Button */
-.ai-btn {
-  width: 100%;
-  height: 50px;
-  background: #000000;
-  color: #FFFFFF;
-  border: none;
-  border-radius: 4px;
-  font-size: 15px;
-  font-weight: 300;
-  letter-spacing: 0.05em;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.2s;
-}
-
-.ai-btn:active {
-  opacity: 0.8;
-}
-
-.ai-btn:disabled {
-  opacity: 0.5;
-}
-
-/* ===== Result Section ===== */
-.result-section {
-  padding: 0 16px;
-}
-
-/* State 1: Empty */
-.empty-state {
-  text-align: center;
-  padding: 60px 0;
-}
-
-.empty-state .emoji {
-  font-size: 48px;
-  display: block;
-  margin-bottom: 12px;
-}
-
-.empty-state .text {
-  font-size: 14px;
-  color: #999;
-  font-weight: 300;
-}
-
-/* State 2: Loading Skeleton */
-.loading-state {
-  display: none;
-}
-
-.skeleton-card {
-  background: #F5F5F5;
-  border-radius: 4px;
-  padding: 16px;
-  margin-bottom: 12px;
-  overflow: hidden;
-  position: relative;
-}
-
-.skeleton-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-  0% { left: -100%; }
-  100% { left: 100%; }
-}
-
-.skeleton-line {
-  height: 14px;
-  background: #E0E0E0;
-  border-radius: 2px;
-  margin-bottom: 8px;
-}
-
-.skeleton-line.w60 { width: 60%; }
-.skeleton-line.w80 { width: 80%; }
-.skeleton-line.w100 { width: 100%; }
-.skeleton-line.w40 { width: 40%; }
-.skeleton-line.h20 { height: 20px; }
-.skeleton-blocks {
-  display: flex;
-  gap: 8px;
-  margin: 12px 0;
-}
-
-.skeleton-block {
-  width: 50px;
-  height: 70px;
-  background: #E0E0E0;
-  border-radius: 2px;
-}
-
-/* State 3: Results */
-.result-state {
-  display: none;
-}
-
-.result-header {
-  font-size: 12px;
-  color: #999;
-  font-weight: 300;
-  margin-bottom: 12px;
-}
-
-.outfit-card {
-  border: 1px solid #E0E0E0;
-  border-radius: 4px;
-  padding: 16px;
-  margin-bottom: 12px;
-  transition: all 0.3s;
-  position: relative;
-}
-
-.outfit-card.selected {
-  border-color: #000000;
-  border-width: 2px;
-}
-
-.outfit-card.dimmed {
-  opacity: 0.4;
-}
-
-.outfit-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.outfit-card-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: #000;
-}
-
-.select-btn {
-  padding: 6px 16px;
-  font-size: 12px;
-  font-weight: 300;
-  border: 1px solid #000;
-  border-radius: 4px;
-  background: #FFF;
-  color: #000;
-  cursor: pointer;
+  gap: 4px;
   transition: all 0.2s;
 }
-
-.select-btn.active {
-  background: #000;
-  color: #FFF;
-}
-
-/* Item swatches row */
-.swatch-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.swatch-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.swatch-color {
-  width: 50px;
-  height: 70px;
-  border-radius: 2px;
-  border: 1px solid #E8E8E8;
-}
-
-.swatch-name {
-  font-size: 10px;
-  color: #999;
-  font-weight: 300;
-  text-align: center;
-  max-width: 60px;
-  line-height: 1.2;
-}
-
-.reason {
-  font-size: 12px;
-  color: #999;
-  font-weight: 300;
-  line-height: 1.5;
+.pickup-btn:active { background: #EEE; }
+.pickup-selected {
   margin-top: 8px;
-}
-
-/* Selected badge */
-.selected-badge {
   display: none;
-  font-size: 11px;
-  color: #4CAF50;
-  font-weight: 500;
-  margin-top: 8px;
+  padding: 8px 12px;
+  background: #F9F9F9;
+  border-radius: 6px;
+  align-items: center;
+  gap: 8px;
+}
+.pickup-selected.show { display: flex; }
+.pickup-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid #E0E0E0;
+  flex-shrink: 0;
+}
+.pickup-name { font-size: 13px; color: #333; }
+.pickup-remove {
+  margin-left: auto;
+  font-size: 18px;
+  color: #999;
+  cursor: pointer;
+  padding: 0 4px;
 }
 
-.outfit-card.selected .selected-badge {
-  display: block;
-}
-
-/* ===== Bottom Drawer (Overlay) ===== */
+/* 底部抽屉 */
 .drawer-overlay {
   position: fixed;
-  top: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.drawer-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.drawer-panel {
+  position: fixed;
+  bottom: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(100%);
   width: 100%;
   max-width: 390px;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 200;
-  display: none;
-  align-items: flex-end;
-}
-
-.drawer-overlay.show {
-  display: flex;
-}
-
-.drawer-panel {
-  width: 100%;
-  background: #FFF;
+  max-height: 60vh;
+  background: #fff;
   border-radius: 16px 16px 0 0;
-  padding: 20px 16px 24px;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
+  padding: 20px;
+  z-index: 201;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
 }
-
-.drawer-overlay.show .drawer-panel {
-  transform: translateY(0);
+.drawer-panel.open {
+  transform: translateX(-50%) translateY(0);
 }
-
 .drawer-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
 }
-
-.drawer-header h3 {
-  font-size: 15px;
-  font-weight: 400;
-}
-
-.drawer-close {
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 18px;
-  color: #999;
-  border: none;
-  background: none;
-}
-
-.item-grid {
+.drawer-header h3 { font-size: 16px; font-weight: 600; }
+.drawer-close { font-size: 20px; cursor: pointer; color: #999; padding: 4px; }
+.drawer-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  margin-bottom: 16px;
 }
-
-.item-card {
+.drawer-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
   cursor: pointer;
   padding: 8px;
-  border-radius: 4px;
-  transition: all 0.2s;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: border-color 0.2s;
 }
-
-.item-card .item-color {
+.drawer-item.selected { border-color: #000; }
+.drawer-item .swatch {
   width: 60px;
   height: 80px;
-  border-radius: 2px;
-  border: 1px solid #E8E8E8;
-  transition: all 0.2s;
+  border-radius: 6px;
+  margin-bottom: 6px;
 }
-
-.item-card.selected .item-color {
-  border: 2px solid #000;
-}
-
-.item-card .item-name {
-  font-size: 11px;
+.drawer-item .name {
+  font-size: 12px;
   color: #666;
-  font-weight: 300;
   text-align: center;
 }
-
 .drawer-confirm {
+  margin-top: 16px;
   width: 100%;
   height: 44px;
   background: #000;
-  color: #FFF;
+  color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 14px;
-  font-weight: 300;
   cursor: pointer;
 }
+.drawer-confirm:disabled { background: #CCC; cursor: default; }
 
-/* ===== Bottom Tab ===== */
+/* === AI 搭配按钮 === */
+.ai-btn {
+  display: block;
+  width: calc(100% - 32px);
+  margin: 0 16px 16px;
+  height: 50px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.ai-btn:active { opacity: 0.8; }
+
+/* === 搭配结果 === */
+.result-section { padding: 0 16px; }
+
+/* 状态一 */
+.result-empty {
+  text-align: center;
+  padding: 48px 0;
+}
+.result-empty .icon { font-size: 48px; margin-bottom: 12px; }
+.result-empty .text { font-size: 14px; color: #BBB; }
+
+/* 状态二 loading */
+.result-loading { display: none; }
+.skeleton {
+  height: 120px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #F0F0F0 25%, #E0E0E0 50%, #F0F0F0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  margin-bottom: 12px;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* 状态三 结果 */
+.result-content { display: none; }
+.result-summary {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 12px;
+}
+.plan-card {
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: all 0.25s;
+}
+.plan-card.selected {
+  border: 2px solid #000;
+}
+.plan-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.plan-title { font-size: 14px; font-weight: 700; }
+.plan-select-btn {
+  font-size: 12px;
+  padding: 6px 14px;
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.plan-select-btn.is-selected {
+  background: #000;
+  color: #fff;
+}
+.plan-items {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+.plan-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.plan-swatch {
+  width: 48px;
+  height: 64px;
+  border-radius: 6px;
+  border: 1px solid #F0F0F0;
+}
+.plan-item-name {
+  font-size: 10px;
+  color: #999;
+  margin-top: 4px;
+  text-align: center;
+  max-width: 56px;
+  line-height: 1.2;
+}
+.plan-reason {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 收藏按钮 */
+.favorite-btn {
+  display: none;
+  width: 100%;
+  height: 44px;
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  transition: all 0.2s;
+}
+.favorite-btn.saved {
+  color: #999;
+  border-color: #CCC;
+  cursor: default;
+}
+
+/* 绿色提示条 */
+.toast-success {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #4CAF50;
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 20px;
+  font-size: 13px;
+  z-index: 150;
+  opacity: 0;
+  transition: all 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast-success.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* 底部Tab */
 .bottom-tab {
   position: fixed;
   bottom: 0;
@@ -470,358 +434,520 @@ body {
   transform: translateX(-50%);
   width: 100%;
   max-width: 390px;
-  height: 60px;
-  background: #FFFFFF;
+  height: 64px;
+  background: #fff;
+  border-top: 1px solid #F0F0F0;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  border-top: 1px solid #F0F0F0;
   z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
-
 .tab-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
   text-decoration: none;
-  color: #999;
   font-size: 10px;
-  font-weight: 300;
+  color: #999;
+  padding: 4px 12px;
   cursor: pointer;
-  transition: color 0.2s;
 }
-
-.tab-item.active {
-  color: #000;
-}
-
-.tab-item .tab-icon {
-  font-size: 20px;
-}
+.tab-item .icon { font-size: 22px; margin-bottom: 2px; }
+.tab-item.active { color: #000; }
 </style>
 </head>
 <body>
-
-<div class="phone-frame">
-  <!-- Top Nav -->
-  <nav class="top-nav">
+<div class="app">
+  <!-- 顶部导航 -->
+  <header class="header">
     <h1>WARDROBE</h1>
-  </nav>
+  </header>
 
-  <!-- Content -->
+  <!-- 内容区 -->
   <div class="content">
-    <!-- Condition Section -->
-    <section class="condition-section">
-      <div class="section-label">今天去哪里？</div>
-      <div class="tag-row" id="occasion-tags">
-        <div class="tag" data-value="日常">日常</div>
-        <div class="tag active" data-value="职场">职场</div>
-        <div class="tag" data-value="约会">约会</div>
-        <div class="tag" data-value="聚会">聚会</div>
-        <div class="tag" data-value="运动">运动</div>
+
+    <!-- 1. 场合选择 -->
+    <div class="occasion-section">
+      <div class="section-title">今天去哪里？</div>
+      <div class="tags-scroll" id="occasionTags">
+        <span class="tag" data-val="日常">日常</span>
+        <span class="tag active" data-val="职场">职场</span>
+        <span class="tag" data-val="约会">约会</span>
+        <span class="tag" data-val="聚会">聚会</span>
+        <span class="tag" data-val="运动">运动</span>
       </div>
+      <input class="custom-input" id="customOccasion" type="text" placeholder="或输入自定义场景，如：参加朋友婚礼、海边旅行…">
+    </div>
 
-      <div class="section-label">今天天气</div>
-      <div class="tag-row" id="weather-tags">
-        <div class="tag active" data-value="☀️ 晴天">☀️ 晴天</div>
-        <div class="tag" data-value="☁️ 阴天">☁️ 阴天</div>
-        <div class="tag" data-value="🌧 雨天">🌧 雨天</div>
-      </div>
-
-      <div class="section-label">温度范围</div>
-      <div class="tag-row" id="temp-tags">
-        <div class="tag" data-value="＜10°">＜10°</div>
-        <div class="tag" data-value="10-20°">10-20°</div>
-        <div class="tag active" data-value="20-30°">20-30°</div>
-        <div class="tag" data-value="＞30°">＞30°</div>
-      </div>
-
-      <div class="section-label">想穿某件？（可选）</div>
-      <div class="pick-btn" id="pick-btn" onclick="openDrawer()">+ 从衣橱选择</div>
-
-      <div class="divider"></div>
-
-      <button class="ai-btn" id="ai-btn" onclick="generateOutfit()">✨ AI 帮我搭配</button>
-    </section>
-
-    <!-- Result Section -->
-    <section class="result-section">
-      <!-- State 1: Empty -->
-      <div class="empty-state" id="empty-state">
-        <span class="emoji">🧥</span>
-        <span class="text">选好条件，开始搭配</span>
-      </div>
-
-      <!-- State 2: Loading -->
-      <div class="loading-state" id="loading-state">
-        <div class="skeleton-card">
-          <div class="skeleton-line w40 h20"></div>
-          <div class="skeleton-blocks">
-            <div class="skeleton-block"></div>
-            <div class="skeleton-block"></div>
-            <div class="skeleton-block"></div>
-          </div>
-          <div class="skeleton-line w80"></div>
-          <div class="skeleton-line w60"></div>
-        </div>
-        <div class="skeleton-card">
-          <div class="skeleton-line w40 h20"></div>
-          <div class="skeleton-blocks">
-            <div class="skeleton-block"></div>
-            <div class="skeleton-block"></div>
-            <div class="skeleton-block"></div>
-          </div>
-          <div class="skeleton-line w80"></div>
-          <div class="skeleton-line w60"></div>
-        </div>
-        <div class="skeleton-card">
-          <div class="skeleton-line w40 h20"></div>
-          <div class="skeleton-blocks">
-            <div class="skeleton-block"></div>
-            <div class="skeleton-block"></div>
-            <div class="skeleton-block"></div>
-          </div>
-          <div class="skeleton-line w80"></div>
-          <div class="skeleton-line w60"></div>
+    <!-- 2. 天气区 -->
+    <div class="weather-section">
+      <div class="weather-header">
+        <span class="section-title" style="margin-bottom:0">今天天气</span>
+        <div style="display:flex;align-items:center;">
+          <button class="location-btn" id="locationBtn">📍 自动定位</button>
+          <span class="location-updated" id="locationUpdated">已更新</span>
         </div>
       </div>
-
-      <!-- State 3: Results -->
-      <div class="result-state" id="result-state">
-        <div class="result-header" id="result-header"></div>
-
-        <div class="outfit-card" id="card-0">
-          <div class="outfit-card-header">
-            <span class="outfit-card-title">方案一</span>
-            <button class="select-btn" onclick="selectCard(0)">选择</button>
-          </div>
-          <div class="swatch-row">
-            <div class="swatch-item">
-              <div class="swatch-color" style="background: #E8E8E8;"></div>
-              <span class="swatch-name">白色衬衫</span>
-            </div>
-            <div class="swatch-item">
-              <div class="swatch-color" style="background: #2C2C2C;"></div>
-              <span class="swatch-name">黑色西裤</span>
-            </div>
-            <div class="swatch-item">
-              <div class="swatch-color" style="background: #1A1A1A;"></div>
-              <span class="swatch-name">切尔西靴</span>
-            </div>
-          </div>
-          <div class="reason">经典黑白，职场首选，干净利落</div>
-          <div class="selected-badge">✓ 已选择</div>
-        </div>
-
-        <div class="outfit-card" id="card-1">
-          <div class="outfit-card-header">
-            <span class="outfit-card-title">方案二</span>
-            <button class="select-btn" onclick="selectCard(1)">选择</button>
-          </div>
-          <div class="swatch-row">
-            <div class="swatch-item">
-              <div class="swatch-color" style="background: #9E9E9E;"></div>
-              <span class="swatch-name">灰色卫衣</span>
-            </div>
-            <div class="swatch-item">
-              <div class="swatch-color" style="background: #2B4B7A;"></div>
-              <span class="swatch-name">深蓝牛仔裤</span>
-            </div>
-            <div class="swatch-item">
-              <div class="swatch-color" style="background: #1A1A1A;"></div>
-              <span class="swatch-name">切尔西靴</span>
-            </div>
-          </div>
-          <div class="reason">休闲商务，舒适不失整洁</div>
-          <div class="selected-badge">✓ 已选择</div>
-        </div>
-
-        <div class="outfit-card" id="card-2">
-          <div class="outfit-card-header">
-            <span class="outfit-card-title">方案三</span>
-            <button class="select-btn" onclick="selectCard(2)">选择</button>
-          </div>
-          <div class="swatch-row">
-            <div class="swatch-item">
-              <div class="swatch-color" style="background: #E8E8E8;"></div>
-              <span class="swatch-name">白色衬衫</span>
-            </div>
-            <div class="swatch-item">
-              <div class="swatch-color" style="background: #2B4B7A;"></div>
-              <span class="swatch-name">深蓝牛仔裤</span>
-            </div>
-            <div class="swatch-item">
-              <div class="swatch-color" style="background: #1A1A1A;"></div>
-              <span class="swatch-name">切尔西靴</span>
-            </div>
-          </div>
-          <div class="reason">轻松通勤，扎衬衫可提升正式度</div>
-          <div class="selected-badge">✓ 已选择</div>
-        </div>
+      <div class="weather-row" id="weatherTags">
+        <span class="w-tag active" data-val="☀️ 晴天">☀️ 晴天</span>
+        <span class="w-tag" data-val="☁️ 阴天">☁️ 阴天</span>
+        <span class="w-tag" data-val="🌧 雨天">🌧 雨天</span>
       </div>
-    </section>
+      <div class="temp-row" id="tempTags">
+        <span class="w-tag" data-val="＜10°">＜10°</span>
+        <span class="w-tag" data-val="10-20°">10-20°</span>
+        <span class="w-tag active" data-val="20-30°">20-30°</span>
+        <span class="w-tag" data-val="＞30°">＞30°</span>
+      </div>
+    </div>
+
+    <!-- 3. 指定单品 -->
+    <div class="pickup-section">
+      <div class="section-title">想穿某件？（可选）</div>
+      <button class="pickup-btn" id="pickupBtn">+ 从衣橱选择</button>
+      <div class="pickup-selected" id="pickupSelected">
+        <span class="pickup-swatch" id="pickupSwatch"></span>
+        <span class="pickup-name" id="pickupName"></span>
+        <span class="pickup-remove" id="pickupRemove">×</span>
+      </div>
+    </div>
+
+    <!-- 4. AI 搭配按钮 -->
+    <button class="ai-btn" id="aiBtn">✨ AI 帮我搭配</button>
+
+    <!-- 5. 搭配结果 -->
+    <div class="result-section">
+      <div class="result-empty" id="resultEmpty">
+        <div class="icon">🧥</div>
+        <div class="text">选好条件，开始搭配</div>
+      </div>
+      <div class="result-loading" id="resultLoading">
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      </div>
+      <div class="result-content" id="resultContent">
+        <div class="result-summary" id="resultSummary"></div>
+        <div id="planCards"></div>
+        <button class="favorite-btn" id="favoriteBtn">❤️ 收藏当前搭配</button>
+      </div>
+    </div>
+
   </div>
 
-  <!-- Bottom Tab -->
+  <!-- 底部Tab -->
   <nav class="bottom-tab">
     <a class="tab-item" href="index.html">
-      <span class="tab-icon">👗</span>
+      <span class="icon">👗</span>
       <span>衣橱</span>
     </a>
     <a class="tab-item active" href="outfit.html">
-      <span class="tab-icon">✨</span>
+      <span class="icon">✨</span>
       <span>搭配</span>
     </a>
     <a class="tab-item" href="shop.html">
-      <span class="tab-icon">🛍</span>
+      <span class="icon">🛍</span>
       <span>购物</span>
     </a>
+    <a class="tab-item" href="favorites.html">
+      <span class="icon">❤️</span>
+      <span>收藏</span>
+    </a>
   </nav>
-</div>
 
-<!-- Drawer Overlay -->
-<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer(event)">
-  <div class="drawer-panel" onclick="event.stopPropagation()">
+  <!-- 底部抽屉 -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer-panel" id="drawerPanel">
     <div class="drawer-header">
       <h3>选择单品</h3>
-      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+      <span class="drawer-close" id="drawerClose">✕</span>
     </div>
-    <div class="item-grid" id="item-grid">
-      <!-- Items injected by JS -->
-    </div>
-    <button class="drawer-confirm" onclick="confirmItem()">确认</button>
+    <div class="drawer-grid" id="drawerGrid"></div>
+    <button class="drawer-confirm" id="drawerConfirm" disabled>确认选择</button>
   </div>
+
+  <!-- 绿色提示条 -->
+  <div class="toast-success" id="toastSuccess">✓ 今日穿搭已记录</div>
 </div>
 
 <script>
-// ===== Tag Selection =====
-document.querySelectorAll('.tag-row').forEach(row => {
-  row.addEventListener('click', e => {
-    const tag = e.target.closest('.tag');
-    if (!tag) return;
-    row.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
-    tag.classList.add('active');
-  });
-});
-
-// ===== Drawer =====
-const wardrobeItems = [
+// ============ 数据 ============
+const mockItems = [
   { name: '白色衬衫', color: '#E8E8E8' },
+  { name: '灰色卫衣', color: '#9E9E9E' },
   { name: '黑色西裤', color: '#2C2C2C' },
   { name: '深蓝牛仔裤', color: '#2B4B7A' },
-  { name: '灰色卫衣', color: '#9E9E9E' },
   { name: '切尔西靴', color: '#1A1A1A' },
-  { name: '白色T恤', color: '#F5F5F5' },
+  { name: '帆布鞋', color: '#F5F5DC' }
 ];
 
-let selectedItemIndex = -1;
+const plans = [
+  {
+    name: '方案一',
+    items: [
+      { name: '白色衬衫', color: '#E8E8E8' },
+      { name: '黑色西裤', color: '#2C2C2C' },
+      { name: '切尔西靴', color: '#1A1A1A' }
+    ],
+    reason: '经典黑白组合，职场首选，干净利落'
+  },
+  {
+    name: '方案二',
+    items: [
+      { name: '灰色卫衣', color: '#9E9E9E' },
+      { name: '深蓝牛仔裤', color: '#2B4B7A' },
+      { name: '切尔西靴', color: '#1A1A1A' }
+    ],
+    reason: '休闲商务风，舒适不失整洁'
+  },
+  {
+    name: '方案三',
+    items: [
+      { name: '白色衬衫', color: '#E8E8E8' },
+      { name: '深蓝牛仔裤', color: '#2B4B7A' },
+      { name: '切尔西靴', color: '#1A1A1A' }
+    ],
+    reason: '轻松通勤感，衬衫扎进裤腰可提升正式感'
+  }
+];
 
-function renderDrawerItems() {
-  const grid = document.getElementById('item-grid');
-  grid.innerHTML = wardrobeItems.map((item, i) => `
-    <div class="item-card" data-index="${i}" onclick="toggleDrawerItem(${i})">
-      <div class="item-color" style="background: ${item.color};"></div>
-      <span class="item-name">${item.name}</span>
+// ============ 状态 ============
+let selectedOccasion = '职场';
+let customOccasion = '';
+let selectedWeather = '☀️ 晴天';
+let selectedTemp = '20-30°';
+let selectedItem = null;
+let selectedPlan = null;
+let isFavorited = false;
+
+// ============ DOM ============
+const occasionTagsEl = document.getElementById('occasionTags');
+const customInput = document.getElementById('customOccasion');
+const weatherTagsEl = document.getElementById('weatherTags');
+const tempTagsEl = document.getElementById('tempTags');
+const locationBtn = document.getElementById('locationBtn');
+const locationUpdated = document.getElementById('locationUpdated');
+const pickupBtn = document.getElementById('pickupBtn');
+const pickupSelectedEl = document.getElementById('pickupSelected');
+const pickupSwatchEl = document.getElementById('pickupSwatch');
+const pickupNameEl = document.getElementById('pickupName');
+const pickupRemove = document.getElementById('pickupRemove');
+const aiBtn = document.getElementById('aiBtn');
+const resultEmpty = document.getElementById('resultEmpty');
+const resultLoading = document.getElementById('resultLoading');
+const resultContent = document.getElementById('resultContent');
+const resultSummary = document.getElementById('resultSummary');
+const planCards = document.getElementById('planCards');
+const favoriteBtn = document.getElementById('favoriteBtn');
+const toastSuccess = document.getElementById('toastSuccess');
+const drawerOverlay = document.getElementById('drawerOverlay');
+const drawerPanel = document.getElementById('drawerPanel');
+const drawerClose = document.getElementById('drawerClose');
+const drawerGrid = document.getElementById('drawerGrid');
+const drawerConfirm = document.getElementById('drawerConfirm');
+
+// ============ 场合标签 ============
+occasionTagsEl.addEventListener('click', (e) => {
+  const tag = e.target.closest('.tag');
+  if (!tag) return;
+  // 清空自定义输入
+  customInput.value = '';
+  customOccasion = '';
+  // 切换选中
+  occasionTagsEl.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+  tag.classList.add('active');
+  selectedOccasion = tag.dataset.val;
+});
+
+// ============ 自定义输入 ============
+customInput.addEventListener('input', (e) => {
+  const val = e.target.value.trim();
+  customOccasion = val;
+  if (val) {
+    occasionTagsEl.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+    selectedOccasion = val;
+  }
+});
+
+// ============ 天气标签 ============
+function setupTags(container, setter) {
+  container.addEventListener('click', (e) => {
+    const tag = e.target.closest('.w-tag');
+    if (!tag) return;
+    container.querySelectorAll('.w-tag').forEach(t => t.classList.remove('active'));
+    tag.classList.add('active');
+    setter(tag.dataset.val);
+  });
+}
+setupTags(weatherTagsEl, (v) => { selectedWeather = v; });
+setupTags(tempTagsEl, (v) => { selectedTemp = v; });
+
+// ============ 天气自动定位 ============
+locationBtn.addEventListener('click', () => {
+  if (locationBtn.disabled) return;
+  locationBtn.textContent = '定位中...';
+  locationBtn.disabled = true;
+  locationUpdated.classList.remove('show');
+
+  if (!navigator.geolocation) {
+    restoreLocationBtn();
+    showToast('浏览器不支持定位，请手动选择');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      fetch(`https://wttr.in/${lat},${lon}?format=j1`)
+        .then(r => r.json())
+        .then(data => {
+          const temp = parseInt(data.current_condition[0].temp_C);
+          const desc = data.current_condition[0].weatherDesc[0].value;
+
+          // 判断天气
+          weatherTagsEl.querySelectorAll('.w-tag').forEach(t => t.classList.remove('active'));
+          if (/rain|Rain|drizzle/i.test(desc)) {
+            weatherTagsEl.querySelector('[data-val="🌧 雨天"]').classList.add('active');
+            selectedWeather = '🌧 雨天';
+          } else if (/cloud|Cloud|overcast/i.test(desc)) {
+            weatherTagsEl.querySelector('[data-val="☁️ 阴天"]').classList.add('active');
+            selectedWeather = '☁️ 阴天';
+          } else {
+            weatherTagsEl.querySelector('[data-val="☀️ 晴天"]').classList.add('active');
+            selectedWeather = '☀️ 晴天';
+          }
+
+          // 判断温度
+          tempTagsEl.querySelectorAll('.w-tag').forEach(t => t.classList.remove('active'));
+          let tempVal;
+          if (temp < 10) tempVal = '＜10°';
+          else if (temp < 20) tempVal = '10-20°';
+          else if (temp < 30) tempVal = '20-30°';
+          else tempVal = '＞30°';
+          tempTagsEl.querySelector(`[data-val="${tempVal}"]`).classList.add('active');
+          selectedTemp = tempVal;
+
+          locationBtn.textContent = '📍 自动定位';
+          locationBtn.disabled = false;
+          locationUpdated.classList.add('show');
+        })
+        .catch(() => {
+          restoreLocationBtn();
+          showToast('天气数据获取失败，请手动选择');
+        });
+    },
+    () => {
+      restoreLocationBtn();
+      showToast('无法获取定位，请手动选择');
+    },
+    { timeout: 8000 }
+  );
+});
+
+function restoreLocationBtn() {
+  locationBtn.textContent = '📍 自动定位';
+  locationBtn.disabled = false;
+}
+
+// ============ 抽屉渲染 ============
+function renderDrawer() {
+  drawerGrid.innerHTML = mockItems.map((item, i) => `
+    <div class="drawer-item" data-index="${i}">
+      <div class="swatch" style="background:${item.color}"></div>
+      <span class="name">${item.name}</span>
     </div>
   `).join('');
 }
+renderDrawer();
 
-function openDrawer() {
-  const overlay = document.getElementById('drawer-overlay');
-  overlay.classList.add('show');
-  renderDrawerItems();
-  selectedItemIndex = -1;
+// 抽屉选中的 item
+let drawerSelected = null;
+
+drawerGrid.addEventListener('click', (e) => {
+  const item = e.target.closest('.drawer-item');
+  if (!item) return;
+  const idx = parseInt(item.dataset.index);
+  drawerGrid.querySelectorAll('.drawer-item').forEach(el => el.classList.remove('selected'));
+  item.classList.add('selected');
+  drawerSelected = mockItems[idx];
+  drawerConfirm.disabled = false;
+});
+
+pickupBtn.addEventListener('click', () => {
+  drawerSelected = null;
+  drawerConfirm.disabled = true;
+  drawerGrid.querySelectorAll('.drawer-item').forEach(el => el.classList.remove('selected'));
+  drawerOverlay.classList.add('open');
+  drawerPanel.classList.add('open');
+});
+
+function closeDrawer() {
+  drawerOverlay.classList.remove('open');
+  drawerPanel.classList.remove('open');
 }
+drawerClose.addEventListener('click', closeDrawer);
+drawerOverlay.addEventListener('click', closeDrawer);
 
-function closeDrawer(e) {
-  if (e && e.target !== document.getElementById('drawer-overlay') && e.target !== document.querySelector('.drawer-close')) return;
-  const overlay = document.getElementById('drawer-overlay');
-  overlay.classList.remove('show');
-}
+drawerConfirm.addEventListener('click', () => {
+  if (!drawerSelected) return;
+  selectedItem = drawerSelected;
+  pickupSwatchEl.style.background = selectedItem.color;
+  pickupNameEl.textContent = selectedItem.name;
+  pickupSelectedEl.classList.add('show');
+  closeDrawer();
+});
 
-function toggleDrawerItem(index) {
-  selectedItemIndex = index;
-  document.querySelectorAll('.item-card').forEach((card, i) => {
-    card.classList.toggle('selected', i === index);
-  });
-}
+pickupRemove.addEventListener('click', () => {
+  selectedItem = null;
+  pickupSelectedEl.classList.remove('show');
+});
 
-function confirmItem() {
-  if (selectedItemIndex >= 0) {
-    const item = wardrobeItems[selectedItemIndex];
-    const btn = document.getElementById('pick-btn');
-    btn.textContent = item.name;
-    btn.classList.add('selected');
-  }
-  document.getElementById('drawer-overlay').classList.remove('show');
-}
-
-// ===== Outfit Generation =====
-let currentState = 'empty';
-
-function generateOutfit() {
-  if (currentState === 'loading') return;
-
-  const occasion = document.querySelector('#occasion-tags .tag.active')?.dataset.value || '';
-  const weather = document.querySelector('#weather-tags .tag.active')?.dataset.value || '';
-  const temp = document.querySelector('#temp-tags .tag.active')?.dataset.value || '';
-
-  // Show loading
-  currentState = 'loading';
-  document.getElementById('empty-state').style.display = 'none';
-  document.getElementById('result-state').style.display = 'none';
-  document.getElementById('loading-state').style.display = 'block';
-
-  const aiBtn = document.getElementById('ai-btn');
-  aiBtn.disabled = true;
-  aiBtn.textContent = '⏳ AI 搭配中...';
+// ============ AI 搭配 ============
+aiBtn.addEventListener('click', () => {
+  // 切换到 loading
+  resultEmpty.style.display = 'none';
+  resultContent.style.display = 'none';
+  resultLoading.style.display = 'block';
+  favoriteBtn.style.display = 'none';
+  selectedPlan = null;
+  isFavorited = false;
 
   setTimeout(() => {
-    // Show results
-    document.getElementById('loading-state').style.display = 'none';
-    document.getElementById('result-state').style.display = 'block';
-
-    const occasionLabel = occasion === '职场' ? '职场通勤' : occasion;
-    document.getElementById('result-header').textContent = `${occasionLabel} · ${weather} ${temp}`;
-
-    // Reset card selections
-    [0, 1, 2].forEach(i => {
-      const card = document.getElementById('card-' + i);
-      card.classList.remove('selected', 'dimmed');
-      const btn = card.querySelector('.select-btn');
-      btn.textContent = '选择';
-      btn.classList.remove('active');
-    });
-
-    currentState = 'result';
-    aiBtn.disabled = false;
-    aiBtn.textContent = '✨ AI 帮我搭配';
-
-    // Scroll to results
-    document.getElementById('result-state').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    resultLoading.style.display = 'none';
+    resultContent.style.display = 'block';
+    renderResults();
   }, 1500);
+});
+
+function renderResults() {
+  const occasion = customOccasion || selectedOccasion;
+  resultSummary.textContent = `${occasion} · ${selectedWeather} ${selectedTemp} 推荐`;
+
+  planCards.innerHTML = plans.map((p, i) => `
+    <div class="plan-card" data-plan="${i}">
+      <div class="plan-header">
+        <span class="plan-title">${p.name}</span>
+        <button class="plan-select-btn" data-plan="${i}">选择</button>
+      </div>
+      <div class="plan-items">
+        ${p.items.map(it => `
+          <div class="plan-item">
+            <div class="plan-swatch" style="background:${it.color}"></div>
+            <span class="plan-item-name">${it.name}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="plan-reason">${p.reason}</div>
+    </div>
+  `).join('');
+
+  favoriteBtn.style.display = 'block';
+  favoriteBtn.textContent = '❤️ 收藏当前搭配';
+  favoriteBtn.classList.remove('saved');
+  isFavorited = false;
 }
 
-// ===== Card Selection =====
-function selectCard(index) {
-  [0, 1, 2].forEach(i => {
-    const card = document.getElementById('card-' + i);
-    const btn = card.querySelector('.select-btn');
-    if (i === index) {
-      card.classList.add('selected');
-      card.classList.remove('dimmed');
-      btn.textContent = '已选';
-      btn.classList.add('active');
-    } else {
-      card.classList.remove('selected');
-      card.classList.add('dimmed');
-      btn.textContent = '选择';
-      btn.classList.remove('active');
-    }
+// ============ 选择方案 ============
+planCards.addEventListener('click', (e) => {
+  const btn = e.target.closest('.plan-select-btn');
+  if (!btn) return;
+  const idx = parseInt(btn.dataset.plan);
+
+  // 取消所有选中
+  planCards.querySelectorAll('.plan-card').forEach(c => {
+    c.classList.remove('selected');
+    c.style.opacity = '1';
   });
-}
-</script>
+  planCards.querySelectorAll('.plan-select-btn').forEach(b => {
+    b.textContent = '选择';
+    b.classList.remove('is-selected');
+  });
 
+  // 选中当前
+  const card = planCards.querySelector(`.plan-card[data-plan="${idx}"]`);
+  card.classList.add('selected');
+  btn.textContent = '✓ 已选';
+  btn.classList.add('is-selected');
+
+  // 其他卡片变淡
+  planCards.querySelectorAll('.plan-card').forEach(c => {
+    if (c !== card) c.style.opacity = '0.5';
+  });
+
+  selectedPlan = idx;
+
+  // 保存到 localStorage
+  const occasion = customOccasion || selectedOccasion;
+  const todayOutfit = {
+    occasion: occasion,
+    weather: selectedWeather,
+    temp: selectedTemp,
+    plan: plans[idx],
+    selectedItem: selectedItem,
+    savedAt: new Date().toISOString()
+  };
+  localStorage.setItem('today_outfit', JSON.stringify(todayOutfit));
+
+  // 绿色提示条
+  showToastSuccess();
+});
+
+function showToastSuccess() {
+  toastSuccess.classList.add('show');
+  setTimeout(() => {
+    toastSuccess.classList.remove('show');
+  }, 2500);
+}
+
+// ============ Toast 提示 ============
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = `
+    position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
+    background:rgba(0,0,0,0.75); color:#fff; padding:8px 18px;
+    border-radius:16px; font-size:12px; z-index:300; white-space:nowrap;
+  `;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+// ============ 收藏 ============
+favoriteBtn.addEventListener('click', () => {
+  if (isFavorited) return;
+  const planIdx = selectedPlan !== null ? selectedPlan : 0;
+  const plan = plans[planIdx];
+  const occasion = customOccasion || selectedOccasion;
+
+  // 推断季节
+  let season = '春夏';
+  if (selectedTemp === '＜10°') season = '冬季';
+  else if (selectedTemp === '10-20°') season = '春秋';
+  else if (selectedTemp === '＞30°') season = '盛夏';
+
+  const favItem = {
+    id: Date.now(),
+    outfitName: plan.name,
+    items: plan.items.map(it => ({ ...it })),
+    occasion: occasion,
+    weather: selectedWeather,
+    tags: [occasion, season],
+    savedAt: new Date().toISOString()
+  };
+
+  let favorites = [];
+  try {
+    favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+  } catch (e) { favorites = []; }
+  favorites.push(favItem);
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+
+  favoriteBtn.textContent = '已收藏 ❤️';
+  favoriteBtn.classList.add('saved');
+  isFavorited = true;
+});
+</script>
 </body>
 </html>
