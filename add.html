@@ -23,7 +23,6 @@
 
     a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
 
-    /* ── Phone frame ── */
     .phone-frame {
       max-width: 390px;
       margin: 0 auto;
@@ -34,7 +33,6 @@
       overflow-x: hidden;
     }
 
-    /* ── Fixed Header ── */
     .header {
       position: fixed;
       top: 0;
@@ -82,12 +80,10 @@
       flex-shrink: 0;
     }
 
-    /* ── Scrollable Content ── */
     .content {
       padding: 52px 0 80px;
     }
 
-    /* ── Upload Area ── */
     .upload-area {
       width: calc(100% - 32px);
       margin: 16px auto;
@@ -105,9 +101,7 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    .upload-area:active {
-      background: #FAFAFA;
-    }
+    .upload-area:active { background: #FAFAFA; }
 
     .upload-placeholder {
       display: flex;
@@ -116,20 +110,11 @@
       gap: 8px;
     }
 
-    .upload-camera {
-      font-size: 48px;
-      line-height: 1;
-    }
-
-    .upload-main-text {
-      font-size: 14px;
-      color: #666;
-    }
-
-    .upload-sub-text {
-      font-size: 12px;
-      color: #999;
-    }
+    .upload-camera { font-size: 48px; line-height: 1; }
+    .upload-main-text { font-size: 14px; color: #666; }
+    .upload-sub-text { font-size: 12px; color: #999; }
+    .upload-paste-hint { font-size: 12px; color: #999; }
+    .upload-paste-or { font-size: 12px; color: #999; margin: 8px 0; }
 
     .upload-preview {
       width: 100%;
@@ -139,7 +124,6 @@
       display: none;
     }
 
-    /* ── AI Status Area ── */
     .ai-status {
       padding: 16px;
       min-height: 50px;
@@ -149,9 +133,7 @@
       flex-direction: column;
     }
 
-    .ai-status.visible {
-      display: flex;
-    }
+    .ai-status.visible { display: flex; }
 
     .ai-loading-text {
       color: #999;
@@ -161,20 +143,12 @@
       gap: 8px;
     }
 
-    .ai-dot-spinner {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-    }
-
+    .ai-dot-spinner { display: flex; gap: 4px; align-items: center; }
     .ai-dot-spinner span {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
+      width: 6px; height: 6px; border-radius: 50%;
       background: #999;
       animation: dotPulse 1.2s ease-in-out infinite;
     }
-
     .ai-dot-spinner span:nth-child(2) { animation-delay: 0.2s; }
     .ai-dot-spinner span:nth-child(3) { animation-delay: 0.4s; }
 
@@ -183,258 +157,105 @@
       40% { opacity: 1; transform: scale(1); }
     }
 
-    /* ── Form Section ── */
-    .form-section {
-      display: none;
-      padding: 0 16px;
-    }
+    .form-section { display: none; padding: 0 16px; }
+    .form-section.visible { display: block; }
 
-    .form-section.visible {
-      display: block;
-    }
+    .form-row { padding: 16px 0; border-bottom: 1px solid #F0F0F0; }
+    .form-label { font-size: 12px; color: #999; margin-bottom: 10px; letter-spacing: 0.5px; }
 
-    .form-row {
-      padding: 16px 0;
-      border-bottom: 1px solid #F0F0F0;
-    }
-
-    .form-label {
-      font-size: 12px;
-      color: #999;
-      margin-bottom: 10px;
-      letter-spacing: 0.5px;
-    }
-
-    /* Tag buttons */
-    .tag-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
+    .tag-group { display: flex; flex-wrap: wrap; gap: 8px; }
     .tag {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 36px;
-      padding: 0 14px;
-      font-size: 13px;
-      font-weight: 300;
-      color: #000;
-      border: 1px solid #E0E0E0;
-      background: #FFF;
-      cursor: pointer;
-      transition: all 0.15s;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 36px; padding: 0 14px; font-size: 13px; font-weight: 300;
+      color: #000; border: 1px solid #E0E0E0; background: #FFF;
+      cursor: pointer; transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent; user-select: none; white-space: nowrap;
     }
+    .tag:active { opacity: 0.7; }
+    .tag.selected { background: #000; color: #FFF; border-color: #000; }
 
-    .tag:active {
-      opacity: 0.7;
-    }
-
-    .tag.selected {
-      background: #000;
-      color: #FFF;
-      border-color: #000;
-    }
-
-    /* Color selector */
-    .color-selector {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .color-blocks {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
+    .color-selector { display: flex; align-items: center; gap: 12px; }
+    .color-blocks { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
     .color-block {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: all 0.15s;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 24px; height: 24px; border-radius: 50%;
+      cursor: pointer; border: 2px solid transparent; transition: all 0.15s;
+      position: relative; display: flex; align-items: center; justify-content: center;
       -webkit-tap-highlight-color: transparent;
     }
+    .color-block[data-value="白色"] { border-color: #E0E0E0; }
+    .color-block.selected { border-color: #000; transform: scale(1.1); }
+    .color-block .check { color: #FFF; font-size: 12px; font-weight: bold; line-height: 1; display: none; }
+    .color-block.selected .check { display: block; }
+    .color-block[data-value="白色"] .check { color: #000; }
+    .color-name { font-size: 13px; color: #666; min-width: 30px; }
 
-    .color-block[data-value="白色"] {
-      border-color: #E0E0E0;
-    }
-
-    .color-block.selected {
-      border-color: #000;
-      transform: scale(1.1);
-    }
-
-    .color-block .check {
-      color: #FFF;
-      font-size: 12px;
-      font-weight: bold;
-      line-height: 1;
-      display: none;
-    }
-
-    .color-block.selected .check {
-      display: block;
-    }
-
-    .color-block[data-value="白色"] .check {
-      color: #000;
-    }
-
-    .color-name {
-      font-size: 13px;
-      color: #666;
-      min-width: 30px;
-    }
-
-    /* Note input */
     .note-input {
-      width: 100%;
-      border: none;
-      border-bottom: 1px solid #E0E0E0;
-      font-size: 14px;
-      font-family: inherit;
-      font-weight: 300;
-      padding: 8px 0;
-      outline: none;
-      color: #000;
-      background: transparent;
-      -webkit-appearance: none;
-      border-radius: 0;
+      width: 100%; border: none; border-bottom: 1px solid #E0E0E0;
+      font-size: 14px; font-family: inherit; font-weight: 300;
+      padding: 8px 0; outline: none; color: #000; background: transparent;
+      -webkit-appearance: none; border-radius: 0;
     }
+    .note-input:focus { border-bottom-color: #000; }
+    .note-input::placeholder { color: #CCC; }
 
-    .note-input:focus {
-      border-bottom-color: #000;
-    }
-
-    .note-input::placeholder {
-      color: #CCC;
-    }
-
-    /* ── Sticky Bottom ── */
     .bottom-bar {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 390px;
-      background: #FFFFFF;
-      border-top: 1px solid #E0E0E0;
-      padding: 12px 16px;
-      padding-bottom: max(12px, env(safe-area-inset-bottom));
-      z-index: 100;
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 390px; background: #FFFFFF;
+      border-top: 1px solid #E0E0E0; padding: 12px 16px;
+      padding-bottom: max(12px, env(safe-area-inset-bottom)); z-index: 100;
     }
 
     .btn-submit {
-      width: 100%;
-      height: 50px;
-      min-height: 44px;
-      background: #000;
-      color: #FFF;
-      border: none;
-      font-size: 16px;
-      font-weight: 400;
-      font-family: inherit;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: opacity 0.15s;
-      -webkit-tap-highlight-color: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 100%; height: 50px; min-height: 44px; background: #000; color: #FFF;
+      border: none; font-size: 16px; font-weight: 400; font-family: inherit;
+      letter-spacing: 1px; cursor: pointer; transition: opacity 0.15s;
+      -webkit-tap-highlight-color: transparent; display: flex; align-items: center; justify-content: center;
     }
+    .btn-submit:active { opacity: 0.75; }
 
-    .btn-submit:active {
-      opacity: 0.75;
-    }
-
-    /* ── Toast ── */
     .toast {
-      position: fixed;
-      top: 60px;
-      left: 50%;
+      position: fixed; top: 60px; left: 50%;
       transform: translateX(-50%) translateY(-20px);
-      background: rgba(0, 0, 0, 0.8);
-      color: #FFF;
-      padding: 10px 20px;
-      font-size: 13px;
-      font-family: inherit;
-      font-weight: 300;
-      opacity: 0;
-      transition: all 0.3s ease;
-      z-index: 200;
-      pointer-events: none;
-      white-space: nowrap;
-      max-width: 80%;
-      text-align: center;
+      background: rgba(0,0,0,0.8); color: #FFF;
+      padding: 10px 20px; font-size: 13px; font-family: inherit; font-weight: 300;
+      opacity: 0; transition: all 0.3s ease; z-index: 200;
+      pointer-events: none; white-space: nowrap; max-width: 80%; text-align: center;
     }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* ── Responsive: on wider screens, center the phone frame ── */
     @media (min-width: 391px) {
-      .phone-frame {
-        min-height: 100vh;
-        min-height: 100dvh;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-      }
+      .phone-frame { box-shadow: 0 0 20px rgba(0,0,0,0.05); }
     }
   </style>
 </head>
 <body>
   <div class="phone-frame">
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
-
-    <!-- Fixed Header -->
     <div class="header">
       <div class="header-back" id="btnBack" role="button" aria-label="返回">←</div>
       <span class="header-title">添加衣物</span>
       <div class="header-placeholder"></div>
     </div>
-
-    <!-- Scrollable Content -->
     <div class="content">
-      <!-- Upload Area -->
-      <div class="upload-area" id="uploadArea">
+      <div class="upload-area" id="uploadArea" tabindex="0">
         <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
         <div class="upload-placeholder" id="uploadPlaceholder">
           <div class="upload-camera">📷</div>
           <div class="upload-main-text">点击上传衣物图片</div>
           <div class="upload-sub-text">支持 JPG、PNG</div>
+          <div class="upload-paste-or">或</div>
+          <div class="upload-paste-hint">截图后按 Ctrl+V / ⌘V 直接粘贴</div>
+          <div class="upload-paste-hint">长按此处可粘贴图片</div>
         </div>
         <img class="upload-preview" id="previewImg" alt="衣物预览">
       </div>
-
-      <!-- AI Status -->
       <div class="ai-status" id="aiStatus">
         <div class="ai-loading-text">
           🤖 AI 正在识别
-          <div class="ai-dot-spinner">
-            <span></span><span></span><span></span>
-          </div>
+          <div class="ai-dot-spinner"><span></span><span></span><span></span></div>
         </div>
       </div>
-
-      <!-- Form Section -->
       <div class="form-section" id="formSection">
-        <!-- 品类 - 单选 -->
         <div class="form-row">
           <div class="form-label">品类</div>
           <div class="tag-group" id="categoryGroup" data-single="true">
@@ -446,42 +267,22 @@
             <span class="tag" data-value="连衣裙">连衣裙</span>
           </div>
         </div>
-
-        <!-- 主色调 - 色块选择 -->
         <div class="form-row">
           <div class="form-label">主色调</div>
           <div class="color-selector">
             <div class="color-blocks" id="colorBlocks">
-              <span class="color-block selected" data-value="白色" style="background:#FFFFFF;" title="白色">
-                <span class="check">✓</span>
-              </span>
-              <span class="color-block" data-value="黑色" style="background:#000000;" title="黑色">
-                <span class="check">✓</span>
-              </span>
-              <span class="color-block" data-value="灰色" style="background:#9E9E9E;" title="灰色">
-                <span class="check">✓</span>
-              </span>
-              <span class="color-block" data-value="米色" style="background:#D4C5B0;" title="米色">
-                <span class="check">✓</span>
-              </span>
-              <span class="color-block" data-value="蓝色" style="background:#2B4B7A;" title="蓝色">
-                <span class="check">✓</span>
-              </span>
-              <span class="color-block" data-value="红色" style="background:#C0392B;" title="红色">
-                <span class="check">✓</span>
-              </span>
-              <span class="color-block" data-value="绿色" style="background:#27AE60;" title="绿色">
-                <span class="check">✓</span>
-              </span>
-              <span class="color-block" data-value="棕色" style="background:#795548;" title="棕色">
-                <span class="check">✓</span>
-              </span>
+              <span class="color-block selected" data-value="白色" style="background:#FFFFFF;" title="白色"><span class="check">✓</span></span>
+              <span class="color-block" data-value="黑色" style="background:#000000;" title="黑色"><span class="check">✓</span></span>
+              <span class="color-block" data-value="灰色" style="background:#9E9E9E;" title="灰色"><span class="check">✓</span></span>
+              <span class="color-block" data-value="米色" style="background:#D4C5B0;" title="米色"><span class="check">✓</span></span>
+              <span class="color-block" data-value="蓝色" style="background:#2B4B7A;" title="蓝色"><span class="check">✓</span></span>
+              <span class="color-block" data-value="红色" style="background:#C0392B;" title="红色"><span class="check">✓</span></span>
+              <span class="color-block" data-value="绿色" style="background:#27AE60;" title="绿色"><span class="check">✓</span></span>
+              <span class="color-block" data-value="棕色" style="background:#795548;" title="棕色"><span class="check">✓</span></span>
             </div>
             <span class="color-name" id="colorName">白色</span>
           </div>
         </div>
-
-        <!-- 风格 - 多选 -->
         <div class="form-row">
           <div class="form-label">风格</div>
           <div class="tag-group" id="styleGroup">
@@ -493,8 +294,6 @@
             <span class="tag" data-value="街头">街头</span>
           </div>
         </div>
-
-        <!-- 适用季节 - 多选 -->
         <div class="form-row">
           <div class="form-label">适用季节</div>
           <div class="tag-group" id="seasonGroup">
@@ -504,8 +303,6 @@
             <span class="tag" data-value="冬">冬</span>
           </div>
         </div>
-
-        <!-- 适用场合 - 多选 -->
         <div class="form-row">
           <div class="form-label">适用场合</div>
           <div class="tag-group" id="occasionGroup">
@@ -517,26 +314,19 @@
             <span class="tag" data-value="旅行">旅行</span>
           </div>
         </div>
-
-        <!-- 备注 -->
-        <div class="form-row" style="border-bottom: none;">
+        <div class="form-row" style="border-bottom:none;">
           <div class="form-label">备注</div>
           <input type="text" class="note-input" id="noteInput" placeholder="品牌、价格等（可选）" autocomplete="off">
         </div>
       </div>
     </div>
-
-    <!-- Sticky Bottom Bar -->
     <div class="bottom-bar">
       <button class="btn-submit" id="btnSubmit">确认入库</button>
     </div>
   </div>
-
   <script>
     (function () {
       'use strict';
-
-      // ── Element refs ──
       var btnBack = document.getElementById('btnBack');
       var uploadArea = document.getElementById('uploadArea');
       var fileInput = document.getElementById('fileInput');
@@ -548,16 +338,11 @@
       var noteInput = document.getElementById('noteInput');
       var toast = document.getElementById('toast');
       var colorName = document.getElementById('colorName');
-
       var imageBase64 = null;
       var aiTimer = null;
 
-      // ── Back navigation ──
-      btnBack.addEventListener('click', function () {
-        window.location.href = 'index.html';
-      });
+      btnBack.addEventListener('click', function () { window.location.href = 'index.html'; });
 
-      // ── Tag click logic ──
       document.querySelectorAll('.tag-group').forEach(function (group) {
         var isSingle = group.getAttribute('data-single') === 'true';
         group.querySelectorAll('.tag').forEach(function (tag) {
@@ -572,30 +357,44 @@
         });
       });
 
-      // ── Color block click ──
       document.querySelectorAll('.color-block').forEach(function (block) {
         block.addEventListener('click', function () {
-          document.querySelectorAll('.color-block').forEach(function (b) {
-            b.classList.remove('selected');
-          });
+          document.querySelectorAll('.color-block').forEach(function (b) { b.classList.remove('selected'); });
           block.classList.add('selected');
           colorName.textContent = block.getAttribute('data-value');
         });
       });
 
-      // ── Upload area click ──
       uploadArea.addEventListener('click', function (e) {
-        if (e.target === previewImg) {
-          // If preview is shown and user clicks on it, still allow re-upload
-          fileInput.click();
-          return;
-        }
+        if (e.target === previewImg) { fileInput.click(); return; }
         fileInput.click();
       });
 
       fileInput.addEventListener('change', function () {
-        if (fileInput.files.length) {
-          handleFile(fileInput.files[0]);
+        if (fileInput.files.length) { handleFile(fileInput.files[0]); }
+      });
+
+      // 全局粘贴监听（PC端 Ctrl+V / Cmd+V）
+      document.addEventListener('paste', function (e) {
+        var items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf('image') !== -1) {
+            var file = items[i].getAsFile();
+            if (file) handleFile(file);
+            break;
+          }
+        }
+      });
+
+      // 移动端长按粘贴（upload-area 聚焦后触发）
+      uploadArea.addEventListener('paste', function (e) {
+        var items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf('image') !== -1) {
+            var file = items[i].getAsFile();
+            if (file) handleFile(file);
+            break;
+          }
         }
       });
 
@@ -615,91 +414,47 @@
         reader.readAsDataURL(file);
       }
 
-      // ── AI Recognition (simulated, 3s total) ──
       function startAIRecognition() {
         aiStatus.classList.add('visible');
         formSection.classList.remove('visible');
-
-        // State 2: show loading after upload
         aiTimer = setTimeout(function () {
           aiStatus.classList.remove('visible');
-          // State 3: show form
           formSection.classList.add('visible');
         }, 3000);
       }
 
-      // ── Submit ──
       btnSubmit.addEventListener('click', function () {
-        if (!imageBase64) {
-          showToast('请先上传衣物图片');
-          return;
-        }
-
-        // Gather category (single)
+        if (!imageBase64) { showToast('请先上传衣物图片'); return; }
         var categoryTag = document.querySelector('#categoryGroup .tag.selected');
         var category = categoryTag ? categoryTag.getAttribute('data-value') : '上衣';
-
-        // Gather color
         var colorBlock = document.querySelector('#colorBlocks .color-block.selected');
         var colors = colorBlock ? [colorBlock.getAttribute('data-value')] : ['白色'];
         var colorNameVal = colorBlock ? colorBlock.getAttribute('data-value') : '白色';
-
-        // Gather styles (multi)
         var styles = [];
-        document.querySelectorAll('#styleGroup .tag.selected').forEach(function (t) {
-          styles.push(t.getAttribute('data-value'));
-        });
-
-        // Gather seasons (multi)
+        document.querySelectorAll('#styleGroup .tag.selected').forEach(function (t) { styles.push(t.getAttribute('data-value')); });
         var seasons = [];
-        document.querySelectorAll('#seasonGroup .tag.selected').forEach(function (t) {
-          seasons.push(t.getAttribute('data-value'));
-        });
-
-        // Gather occasions (multi)
+        document.querySelectorAll('#seasonGroup .tag.selected').forEach(function (t) { seasons.push(t.getAttribute('data-value')); });
         var occasions = [];
-        document.querySelectorAll('#occasionGroup .tag.selected').forEach(function (t) {
-          occasions.push(t.getAttribute('data-value'));
-        });
-
-        // Note
+        document.querySelectorAll('#occasionGroup .tag.selected').forEach(function (t) { occasions.push(t.getAttribute('data-value')); });
         var note = noteInput.value.trim();
-
         var item = {
-          id: Date.now(),
-          imageBase64: imageBase64,
-          category: category,
-          colors: colors,
-          colorName: colorNameVal,
-          styles: styles,
-          seasons: seasons,
-          occasions: occasions,
-          note: note,
+          id: Date.now(), imageBase64: imageBase64, category: category,
+          colors: colors, colorName: colorNameVal, styles: styles,
+          seasons: seasons, occasions: occasions, note: note,
           addedAt: new Date().toISOString()
         };
-
         var items = [];
-        try {
-          var stored = localStorage.getItem('wardrobe_items');
-          if (stored) items = JSON.parse(stored);
-        } catch (e) { /* ignore */ }
-
+        try { var stored = localStorage.getItem('wardrobe_items'); if (stored) items = JSON.parse(stored); } catch (e) {}
         items.push(item);
         localStorage.setItem('wardrobe_items', JSON.stringify(items));
-
         showToast('衣物已入库');
-        setTimeout(function () {
-          window.location.href = 'index.html';
-        }, 600);
+        setTimeout(function () { window.location.href = 'index.html'; }, 600);
       });
 
-      // ── Toast ──
       function showToast(msg) {
         toast.textContent = msg;
         toast.classList.add('show');
-        setTimeout(function () {
-          toast.classList.remove('show');
-        }, 2000);
+        setTimeout(function () { toast.classList.remove('show'); }, 2000);
       }
     })();
   </script>
