@@ -384,12 +384,12 @@
     grid.innerHTML = filtered.map(item => {
       const count = wearCount[item.id] || wearCount[item.name] || 0;
       const badge = count > 0 ? `<div class="wear-badge">穿过 ${count} 次</div>` : '';
-      // bg 可能是 data:URL（截图导入）或普通色值
-      const isDataUrl = item.bg && item.bg.startsWith('data:');
-      const imgStyle = isDataUrl
+      // bg 可能是 data:URL / https:// 图片URL / 普通色值
+      const isImgUrl = item.bg && (item.bg.startsWith('data:') || item.bg.startsWith('http'));
+      const imgStyle = isImgUrl
         ? `background:url(${item.bg}) center/cover no-repeat`
         : `background:${item.bg || '#E8E8E8'};color:${isLight(item.bg || '#E8E8E8') ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)'}`;
-      const emojiShow = isDataUrl ? '' : (item.emoji || '');
+      const emojiShow = isImgUrl ? '' : (item.emoji || '');
       return `
       <div class="clothing-card" data-id="${item.id}">
         <div class="clothing-img-wrap">
