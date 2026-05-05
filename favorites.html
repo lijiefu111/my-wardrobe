@@ -237,8 +237,10 @@
     cursor: pointer;
     padding: 6px 12px;
   }
-  .tab-item .tab-icon { font-size: 20px; }
+  .tab-item .tab-icon { font-size: 20px; line-height: 1; }
   .tab-item.active { color: #000; }
+  .tab-item.active .tab-icon { filter: none; }
+  .tab-item:not(.active) .tab-icon { filter: grayscale(1) opacity(0.45); }
 </style>
 </head>
 <body>
